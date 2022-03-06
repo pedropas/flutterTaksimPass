@@ -70,7 +70,7 @@ class Apresentacao extends StatelessWidget {
                     ),
                     child: Text(
                       pularFinal ? "Pular" : "Próximo",
-                      style: TextStyle(color: FONT_COLOR),
+                      style: TextStyle(color: FONT_COLOR, fontSize: 20),
                     ),
                   ),
                   SizedBox(
@@ -79,14 +79,22 @@ class Apresentacao extends StatelessWidget {
                   (pularFinal
                       ? ElevatedButton(
                           onPressed: pularFinal ? proximaPagina : null,
-                          style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all(Colors.white),
+                          style: ElevatedButton.styleFrom(
+                            elevation: 0,
+                            primary: Colors.transparent,
+                            shadowColor: Colors.transparent,
+                            side: BorderSide(
+                              width: 1,
+                              color: Colors.transparent,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
                           ),
                           child: Icon(
                             FontAwesomeIcons.arrowAltCircleRight,
                             color: Colors.black26,
-                            size: 30,
+                            size: 40,
                           ),
                         )
                       : Container()),

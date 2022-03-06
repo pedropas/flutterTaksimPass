@@ -1,10 +1,40 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:taksim/componentes/custom_button.dart';
 import 'package:taksim/helpers/config_screen.dart';
 import '../../componentes/divider_widget.dart';
+import '../base/page_store.dart';
 
-class PreLogin extends StatelessWidget {
+class PreLogin extends StatefulWidget {
+
+  @override
+  State<PreLogin> createState() => _PreLoginState();
+}
+
+class _PreLoginState extends State<PreLogin> {
+  late SharedPreferences sharedPreferences;
+
+  Future<SharedPreferences> getTermoUso() async {
+    sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences;
+  }
+
+  bool isTermoUso = false;
+  int quemChamou = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    getTermoUso().then((value) {
+      setState(() {
+        isTermoUso = (value.getBool(KEY_TERMO_USO) ?? false)
+                  && (value.getBool(KEY_POLITICA_USO) ?? false)
+                  && (value.getBool(KEY_POLITICA_CONTESTACAO) ?? false);
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +79,7 @@ class PreLogin extends StatelessWidget {
                 height: 50,
                 width: MediaQuery.of(context).size.width * 0.90,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: jaTenhoCadastro,
                   child: Text(
                     "JÁ TENHO CONTA",
                     style: TextStyle(
@@ -75,7 +105,7 @@ class PreLogin extends StatelessWidget {
                   style: OutlinedButton.styleFrom(
                     side: BorderSide(width: 2.0, color: BUTTON_COLOR),
                   ),
-                  onPressed: () {},
+                  onPressed: cadastreMe,
                   child: Text(
                     "CADASTRAR-ME",
                     style: TextStyle(
@@ -127,7 +157,7 @@ class PreLogin extends StatelessWidget {
                                          comSombra: false,
                                          backGroundColor: Colors.transparent,
                            buttonFunction: googleLogin),
-                    CustomButton(imageName: 'assets/images/facebookDark.png',
+                    CustomButton(imageName: 'assets/images/facebook.png',
                         comSombra: false,
                         backGroundColor: Colors.black,
                         buttonFunction: facebookLogin),
@@ -177,49 +207,110 @@ class PreLogin extends StatelessWidget {
 
   void visualizarTermoUso()
   {
-    print("Termo");
+    GetIt.I<PageStore>().setPage(INDICE_TELA_TERMO_USO);
+  }
+
+  void mostraMensagem()
+  {
+    showDialog(context: context, builder: (_) =>
+      AlertDialog(
+        title: Text("Termos e Aceites"),
+        content: Text("Você não aceitou os termos e as politicas de uso deste aplicativo se continuar estará aceitando."),
+        actions: [
+          ElevatedButton(onPressed: aceitarContinuar, child: Text("ACEITAR E CONTINUAR")),
+          ElevatedButton(onPressed: ()
+          {
+            Navigator.pop(context);
+            visualizarTermoUso();
+          }
+          , child: Text("VER TERMOS")),
+          ElevatedButton(onPressed: (){
+            Navigator.pop(context);
+          }, child: Text("NÀO ACEITAR")),
+        ],
+      ),
+      barrierDismissible: false,
+    );
+  }
+  void aceitarContinuar()
+  {
+    Navigator.pop(context);
+    sharedPreferences.setBool(KEY_TERMO_USO, true);
+    sharedPreferences.setBool(KEY_POLITICA_USO, true);
+    sharedPreferences.setBool(KEY_POLITICA_CONTESTACAO, true);
+    isTermoUso = true;
+    switch (quemChamou)
+    {
+      case 1:
+        jaTenhoCadastro();
+        break;
+      case 2:
+        cadastreMe();
+        break;
+      case 3:
+        googleLogin();
+        break;
+      case 4:
+        appleLogin();
+        break;
+      case 5:
+        facebookLogin();
+        break;
+    }
+  }
+
+  void jaTenhoCadastro()
+  {
+    quemChamou = 1;
+    print("Ja tenho");
+    if(!isTermoUso)
+      {
+        mostraMensagem();
+        return;
+      }
+  }
+
+  void cadastreMe()
+  {
+    quemChamou = 2;
+    print("Cadastre me");
+    if(!isTermoUso)
+    {
+      mostraMensagem();
+      return;
+    }
   }
 
   void googleLogin()
   {
+    quemChamou = 3;
     print("Tipo google");
+    if(!isTermoUso)
+    {
+      mostraMensagem();
+      return;
+    }
   }
 
   void appleLogin()
   {
+    quemChamou = 4;
     print("Tipo Apple");
+    if(!isTermoUso)
+    {
+      mostraMensagem();
+      return;
+    }
   }
 
   void facebookLogin()
   {
+    quemChamou = 5;
     print("Tipo facebook");
+    if(!isTermoUso)
+    {
+      mostraMensagem();
+      return;
+    }
   }
-
-  // Future<void> _signInWithGoogle() async {
-  //   setIsLoading();
-  //   try {
-  //     // Trigger the authentication flow
-  //     final googleUser = await GoogleSignIn().signIn();
-  //
-  //     // Obtain the auth details from the request
-  //     final googleAuth = await googleUser?.authentication;
-  //
-  //     if (googleAuth != null) {
-  //       // Create a new credential
-  //       final credential = GoogleAuthProvider.credential(
-  //         accessToken: googleAuth.accessToken,
-  //         idToken: googleAuth.idToken,
-  //       );
-  //
-  //       // Once signed in, return the UserCredential
-  //       await _auth.signInWithCredential(credential);
-  //     }
-  //   } on FirebaseAuthException catch (e) {
-  //     setState(() {
-  //       error = '${e.message}';
-  //     });
-  //   } finally {
-  //     setIsLoading();
-  //   }
-  // }
 }

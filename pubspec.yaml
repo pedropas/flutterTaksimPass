@@ -55,6 +55,7 @@ dependencies:
   flutter_native_splash: ^2.0.5
   google_sign_in: ^5.2.4
   progress_stepper: ^1.0.0
+  url_launcher: ^6.0.20
 
   http_pac:
     path: ../../libs/http_pac
@@ -69,9 +70,11 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^1.0.0
+
   mobx_codegen: ^2.0.5+2
   build_runner: ^2.1.7
   flutter_launcher_icons: ^0.9.2
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -109,6 +112,7 @@ flutter:
     - assets/images/onboardin3.png
     - assets/images/googleDark.png
     - assets/images/facebookDark.png
+    - assets/images/facebook.png
     - assets/images/appleDark.png
     - assets/images/apple.png
     - assets/images/Brasil-Flag.png
@@ -152,7 +156,7 @@ flutter:
         - asset: assets/fonts/bolt-semibold.ttf
     - family: Montserrat
       fonts:
-        - asset: assets/fonts/Montserrat-VariableFont_wght.ttf
+        - asset: assets/fonts/Montserrat-Regular.ttf
     - family: Montserrat Bold
       fonts:
         - asset: assets/fonts/Montserrat-Bold.ttf

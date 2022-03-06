@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,7 +16,6 @@ class EscolhaIdioma extends StatefulWidget {
 }
 
 class _EscolhaIdiomaState extends State<EscolhaIdioma> {
-
   late SharedPreferences sharedPreferences;
 
   Future<int> getIdioma() async {
@@ -45,64 +45,89 @@ class _EscolhaIdiomaState extends State<EscolhaIdioma> {
                 titulo: "Idioma",
                 subTitulo: "Escolha o de sua preferência",
                 retornoClicked: onButtonBackClick),
-            SizedBox(height: 160,),
+            SizedBox(
+              height: 160,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                ButtonFlag(flagImage: 'assets/images/Brasil-Flag.png',
+                ButtonFlag(
+                  flagImage: 'assets/images/Brasil-Flag.png',
                   flagName: 'Português',
                   isSelected: idiomaSelecionado == IDIOMA_PORTUGUES,
                   onIdiomaSelecionado: onPortuguesClicked,
                 ),
-                ButtonFlag(flagImage: 'assets/images/USA-Flag.png',
+                ButtonFlag(
+                  flagImage: 'assets/images/USA-Flag.png',
                   flagName: 'Inglesh',
                   isSelected: idiomaSelecionado == IDIOMA_INGLES,
                   onIdiomaSelecionado: onInglesClicked,
                 ),
-                ButtonFlag(flagImage: 'assets/images/Espanha-Flag.png',
+                ButtonFlag(
+                  flagImage: 'assets/images/Espanha-Flag.png',
                   flagName: 'Espanhol',
                   isSelected: idiomaSelecionado == IDIOMA_ESPANHOL,
                   onIdiomaSelecionado: onEspanholClicked,
                 ),
               ],
-            )
+            ),
+            SizedBox(
+              height: 130,
+            ),
+            SizedBox(
+              height: 60,
+              width: MediaQuery.of(context).size.width * .90,
+              child: Align(
+                alignment: Alignment.bottomRight,
+                child: SizedBox(
+                  width: 180,
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: onButtonBackClick,
+                    child: Text(
+                      "PRÓXIMO",
+                      style: TextStyle(
+                        fontFamily: "Montserrat Bold",
+                        fontSize: 15,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 
-  void onButtonBackClick()
-  {
+  void onButtonBackClick() {
     GetIt.I<PageStore>().setPage(INDICE_TELA_ON_BOARD);
   }
 
-  void onPortuguesClicked()
-  {
+  void onPortuguesClicked() {
     setState(() {
       idiomaSelecionado = IDIOMA_PORTUGUES;
     });
     onIdiomaSelecionado(idiomaSelecionado);
   }
 
-  void onInglesClicked()
-  {
+  void onInglesClicked() {
     setState(() {
       idiomaSelecionado = IDIOMA_INGLES;
     });
     onIdiomaSelecionado(idiomaSelecionado);
   }
 
-  void onEspanholClicked()
-  {
+  void onEspanholClicked() {
     setState(() {
       idiomaSelecionado = IDIOMA_ESPANHOL;
     });
     onIdiomaSelecionado(idiomaSelecionado);
   }
 
-  void onIdiomaSelecionado(int idioma)
-  {
-    sharedPreferences.setInt(KEY_PREFERENCE_IDIOMA,idioma);
+  void onIdiomaSelecionado(int idioma) {
+    sharedPreferences.setInt(KEY_PREFERENCE_IDIOMA, idioma);
   }
 }
