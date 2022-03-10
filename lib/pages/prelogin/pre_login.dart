@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:taksim/componentes/custom_button.dart';
+import 'package:taksim/dominio/ent_passageiro.dart';
 import 'package:taksim/helpers/config_screen.dart';
 import '../../componentes/divider_widget.dart';
 import '../base/page_store.dart';
@@ -14,12 +15,7 @@ class PreLogin extends StatefulWidget {
 }
 
 class _PreLoginState extends State<PreLogin> {
-  late SharedPreferences sharedPreferences;
-
-  Future<SharedPreferences> getTermoUso() async {
-    sharedPreferences = await SharedPreferences.getInstance();
-    return sharedPreferences;
-  }
+  SharedPreferences sharedPreferences = GetIt.I<SharedPreferences>();
 
   bool isTermoUso = false;
   int quemChamou = 0;
@@ -27,12 +23,10 @@ class _PreLoginState extends State<PreLogin> {
   @override
   void initState() {
     super.initState();
-    getTermoUso().then((value) {
       setState(() {
-        isTermoUso = (value.getBool(KEY_TERMO_USO) ?? false)
-                  && (value.getBool(KEY_POLITICA_USO) ?? false)
-                  && (value.getBool(KEY_POLITICA_CONTESTACAO) ?? false);
-      });
+        isTermoUso = (sharedPreferences.getBool(KEY_TERMO_USO) ?? false)
+                  && (sharedPreferences.getBool(KEY_POLITICA_USO) ?? false)
+                  && (sharedPreferences.getBool(KEY_POLITICA_CONTESTACAO) ?? false);
     });
   }
 
@@ -40,165 +34,170 @@ class _PreLoginState extends State<PreLogin> {
   Widget build(BuildContext context) {
     // Figma Flutter Generator Splash3Widget - FRAME
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/images/SplashPass.png'),
-            fit: BoxFit.cover,
+      body: SingleChildScrollView(
+        child: Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/images/SplashPass.png'),
+              fit: BoxFit.cover,
+            ),
           ),
-        ),
-        child: Center(
-          child: Column(
-            children: <Widget>[
-              SizedBox(
-                height: 20,
-              ),
-              Image.asset(
-                'assets/images/taksim_logo.png',
-                width: 150,
-                fit: BoxFit.contain,
-              ),
-              SizedBox(
-                height: 150,
-              ),
-              // bem vindo
-              Text(
-                "Seja bem-vindo !",
-                style: TextStyle(
-                  fontFamily: "Montserrat Bold",
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
+          child: Center(
+            child: Column(
+              children: <Widget>[
+                SizedBox(
+                  height: 20,
                 ),
-              ),
-              SizedBox(
-                height: 50,
-              ),
-              // Ja tenho cadastro
-              Container(
-                height: 50,
-                width: MediaQuery.of(context).size.width * 0.90,
-                child: ElevatedButton(
-                  onPressed: jaTenhoCadastro,
-                  child: Text(
-                    "JÁ TENHO CONTA",
-                    style: TextStyle(
-                      fontFamily: "Montserrat Bold",
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(BUTTON_COLOR),
-                  ),
+                Image.asset(
+                  'assets/images/taksim_logo.png',
+                  width: 150,
+                  fit: BoxFit.contain,
                 ),
-              ),
-              SizedBox(
-                height: 30,
-              ),
-              // cadastre-me
-              Container(
-                height: 50,
-                width: MediaQuery.of(context).size.width * 0.90,
-                child: OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                    side: BorderSide(width: 2.0, color: BUTTON_COLOR),
-                  ),
-                  onPressed: cadastreMe,
-                  child: Text(
-                    "CADASTRAR-ME",
-                    style: TextStyle(
-                      fontFamily: "Montserrat Bold",
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
+                SizedBox(
+                  height: 150,
                 ),
-              ),
-              SizedBox(
-                height: 30,
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width * 0.90,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.35,
-                      child: DividerWidget(
-                        corLinha: Colors.white54,
-                      ),
-                    ),
-                    Text(
-                      " ou ",
-                      style: TextStyle(
-                          fontFamily: "Montserrat Bold",
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                          color: Colors.white54),
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.35,
-                      child: DividerWidget(
-                        corLinha: Colors.white54,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width * 0.90,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    CustomButton(imageName: 'assets/images/googleDark.png',
-                                         comSombra: false,
-                                         backGroundColor: Colors.transparent,
-                           buttonFunction: googleLogin),
-                    CustomButton(imageName: 'assets/images/facebook.png',
-                        comSombra: false,
-                        backGroundColor: Colors.black,
-                        buttonFunction: facebookLogin),
-                    CustomButton(imageName: 'assets/images/apple.png',
-                        comSombra: false,
-                        backGroundColor: Colors.black,
-                        buttonFunction: appleLogin),
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              GestureDetector(
-                onTap: visualizarTermoUso,
-                child: Text(
-                  "Ao avançar, declaro que li e concordo com os",// Termos de uso e a Politica de Privacidade. ",
+                // bem vindo
+                Text(
+                  "Seja bem-vindo !",
                   style: TextStyle(
                     fontFamily: "Montserrat Bold",
-                    fontSize: 12,
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
                 ),
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              GestureDetector(
-                onTap: visualizarTermoUso,
-                child: Text(
-                  "Termos de uso e a Politica de Privacidade.",
-                  style: TextStyle(
-                    fontFamily: "Montserrat Bold",
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.indigo,
+                SizedBox(
+                  height: 50,
+                ),
+                // Ja tenho cadastro
+                Container(
+                  height: 50,
+                  width: MediaQuery.of(context).size.width * 0.90,
+                  child: ElevatedButton(
+                    onPressed: jaTenhoCadastro,
+                    child: Text(
+                      "JÁ TENHO CONTA",
+                      style: TextStyle(
+                        fontFamily: "Montserrat Bold",
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(BUTTON_COLOR),
+                    ),
                   ),
                 ),
-              ),
-            ],
+                SizedBox(
+                  height: 30,
+                ),
+                // cadastre-me
+                Container(
+                  height: 50,
+                  width: MediaQuery.of(context).size.width * 0.90,
+                  child: OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                      side: BorderSide(width: 2.0, color: BUTTON_COLOR),
+                    ),
+                    onPressed: cadastreMe,
+                    child: Text(
+                      "CADASTRAR-ME",
+                      style: TextStyle(
+                        fontFamily: "Montserrat Bold",
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 30,
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.90,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.35,
+                        child: DividerWidget(
+                          corLinha: Colors.white54,
+                        ),
+                      ),
+                      Text(
+                        " ou ",
+                        style: TextStyle(
+                            fontFamily: "Montserrat Bold",
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                            color: Colors.white54),
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.35,
+                        child: DividerWidget(
+                          corLinha: Colors.white54,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.90,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      CustomButton(imageName: 'assets/images/googleDark.png',
+                                           comSombra: false,
+                                           backGroundColor: Colors.transparent,
+                             buttonFunction: googleLogin),
+                      CustomButton(imageName: 'assets/images/facebook.png',
+                          comSombra: false,
+                          backGroundColor: Colors.black,
+                          buttonFunction: facebookLogin),
+                      CustomButton(imageName: 'assets/images/apple.png',
+                          comSombra: false,
+                          backGroundColor: Colors.black,
+                          buttonFunction: appleLogin),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                GestureDetector(
+                  onTap: visualizarTermoUso,
+                  child: Text(
+                    "Ao avançar, declaro que li e concordo com os",// Termos de uso e a Politica de Privacidade. ",
+                    style: TextStyle(
+                      fontFamily: "Montserrat Bold",
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                GestureDetector(
+                  onTap: visualizarTermoUso,
+                  child: Text(
+                    "Termos de uso e a Politica de Privacidade.",
+                    style: TextStyle(
+                      fontFamily: "Montserrat Bold",
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.indigo,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -232,6 +231,7 @@ class _PreLoginState extends State<PreLogin> {
       barrierDismissible: false,
     );
   }
+
   void aceitarContinuar()
   {
     Navigator.pop(context);
@@ -270,15 +270,66 @@ class _PreLoginState extends State<PreLogin> {
       }
   }
 
-  void cadastreMe()
-  {
+  void cadastreMe() {
     quemChamou = 2;
-    print("Cadastre me");
-    if(!isTermoUso)
-    {
+    if (!isTermoUso) {
       mostraMensagem();
       return;
     }
+    else if (isPreCadastro()){
+      GetIt.I<PageStore>().setPage(INDICE_TELA_PASSAGEIRO_CADASTRO_1);
+    }
+  }
+  void continuarCadastro()
+  {
+    Navigator.pop(context);
+    switch (sharedPreferences.getString(KEY_STATUS_PASSAGEIRO))
+    {
+      case STATUS_PASSAGEIRO_ONBOARD_1:
+        GetIt.I<PageStore>().setPage(INDICE_TELA_PASSAGEIRO_CADASTRO_1);
+        return;
+      case STATUS_PASSAGEIRO_ONBOARD_2:
+        GetIt.I<PageStore>().setPage(INDICE_TELA_PASSAGEIRO_CADASTRO_2);
+        return;
+      case STATUS_PASSAGEIRO_VALIDA_CONTA:
+      case STATUS_PASSAGEIRO_DOCUMENTO:
+        GetIt.I<PageStore>().setPage(INDICE_TELA_CADASTRO_DOCUMENTO);
+        return;
+      case STATUS_PASSAGEIRO_SENHA:
+        GetIt.I<PageStore>().setPage(INDICE_TELA_CADASTRO_SENHA);
+        return;
+    }
+    GetIt.I<PageStore>().setPage(INDICE_TELA_PASSAGEIRO_CADASTRO_1);
+  }
+
+  void reiniciarCadastro()
+  {
+    Navigator.pop(context);
+    GetIt.I<PageStore>().setPage(INDICE_TELA_PASSAGEIRO_CADASTRO_1);
+  }
+
+  bool isPreCadastro()
+  {
+    if (sharedPreferences.containsKey(KEY_STATUS_PASSAGEIRO)) {
+      showDialog(context: context, builder: (_) =>
+          AlertDialog(
+            title: Text("Cadastro Efetuado"),
+            content: Text(
+                "Você ja iniciou seu cadastro deseja continuar de onde parou ou reinicia-lo ?"),
+            actions: [
+              ElevatedButton(
+                  onPressed: continuarCadastro, child: Text("CONTINUAR")),
+              ElevatedButton(
+                  onPressed: reiniciarCadastro, child: Text("REINICIAR")),
+              ElevatedButton(onPressed: () {
+                Navigator.of(context, rootNavigator: true).pop();
+              }, child: Text("CANCELAR")),
+            ],
+          ),
+        barrierDismissible: false,
+      );
+    }
+    return false;
   }
 
   void googleLogin()

@@ -63,18 +63,21 @@ class Apresentacao extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  ElevatedButton(
-                    onPressed: paginaFinal,
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(Colors.white),
-                    ),
-                    child: Text(
-                      pularFinal ? "Pular" : "Próximo",
-                      style: TextStyle(color: FONT_COLOR, fontSize: 20),
+                  SizedBox(
+                    width: 130,
+                    child: ElevatedButton(
+                      onPressed: paginaFinal,
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(Colors.white),
+                      ),
+                      child: Text(
+                        pularFinal ? "Pular" : "Próximo",
+                        style: TextStyle(color: FONT_COLOR, fontSize: 20),
+                      ),
                     ),
                   ),
                   SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.5,
+                    width: MediaQuery.of(context).size.width * 0.3,
                   ),
                   (pularFinal
                       ? ElevatedButton(

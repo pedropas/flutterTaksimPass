@@ -16,10 +16,9 @@ class EscolhaIdioma extends StatefulWidget {
 }
 
 class _EscolhaIdiomaState extends State<EscolhaIdioma> {
-  late SharedPreferences sharedPreferences;
+  SharedPreferences sharedPreferences = GetIt.I<SharedPreferences>();
 
-  Future<int> getIdioma() async {
-    sharedPreferences = await SharedPreferences.getInstance();
+  int getIdioma() {
     return sharedPreferences.getInt(KEY_PREFERENCE_IDIOMA) ?? IDIOMA_PORTUGUES;
   }
 
@@ -28,9 +27,7 @@ class _EscolhaIdiomaState extends State<EscolhaIdioma> {
   @override
   void initState() {
     super.initState();
-    getIdioma().then((value) {
-      idiomaSelecionado = value;
-    });
+    idiomaSelecionado = getIdioma();
   }
 
   @override

@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http_pac/http_pac.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:taksim/pages/apresentacao/on_board.dart';
 import 'package:taksim/pages/base/base_screen.dart';
 import 'package:taksim/pages/base/page_store.dart';
 import 'package:taksim/pages/login/login_screen.dart';
 
+import 'helpers/config_screen.dart';
 import 'helpers/network_const.dart';
 
 void main() {
@@ -15,7 +17,7 @@ void main() {
   runApp(const MyApp());
 }
 
-void setupLocators()
+Future<void> setupLocators() async
 {
   GetIt.I.registerSingleton(PageStore());
 //  GetIt.I.registerSingleton(MotoristaManagerStore());
@@ -24,8 +26,10 @@ void setupLocators()
       , urlBaseDebug: URL_BASE_DEBUG
       , baseAppUrl: BASE_APP_URL
       , isDebug: IS_DEBUG));
+  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  GetIt.I.registerSingleton(sharedPreferences);
 
- // GetIt.I.registerSingleton(MethodChannel('USB_CHANNEL'));
+  //GetIt.I.registerSingleton(MethodChannel('USB_CHANNEL'));
 }
 
 class MyApp extends StatelessWidget {
@@ -37,7 +41,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Taksim Passageiro',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: BUTTON_COLOR,// Colors.deepPurple,
       ),
       home: const MyHomePage(title: 'Taksim Passageiro'),
     );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:taksim/dominio/ent_passageiro.dart';
 import 'package:taksim/helpers/config_screen.dart';
 
 import '../base/page_store.dart';
@@ -10,10 +11,9 @@ class Splash3Widget extends StatefulWidget {
   State<Splash3Widget> createState() => _Splash3WidgetState();
 }
 
-Future<bool> proximaTela() async
+bool jaEscolheuIdioma()
 {
-  SharedPreferences sharedPreferences;
-  sharedPreferences = await SharedPreferences.getInstance();
+  SharedPreferences sharedPreferences = GetIt.I<SharedPreferences>();
   if (sharedPreferences.containsKey(KEY_PREFERENCE_IDIOMA))
   {
      return true;
@@ -28,6 +28,15 @@ Future<bool> proximaTela() async
 void moveTelaCorreta(bool value)
 {
   if (value) {
+    bool entrarAutomatico = false;
+    if (GetIt.I<SharedPreferences>().containsKey(KEY_PASSAGEIRO)) {
+      EntPassageiro passageiro = EntPassageiro();
+      String? json = GetIt.I<SharedPreferences>().getString(KEY_PASSAGEIRO);
+      passageiro.fromJson(json??"");
+      entrarAutomatico = passageiro.manterConectado;
+      if (passageiro.eMailValidado)
+        GetIt.I<PageStore>().setPage(INDICE_TELA_BEM_VINDO_MAPA);
+    }
     GetIt.I<PageStore>().setPage(INDICE_TELA_ON_BOARD);
   }
   else
@@ -43,7 +52,7 @@ class _Splash3WidgetState extends State<Splash3Widget> {
     super.initState();
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       Future.delayed(Duration(seconds: 2), () {
-        proximaTela().then((value) => moveTelaCorreta(value));
+        moveTelaCorreta(jaEscolheuIdioma());
       });
     });
   }

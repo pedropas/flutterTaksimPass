@@ -10,7 +10,7 @@ class RepositoryLogin {
   static const LOGIN_KEY = 'KEY_LOGIN';
   String endPointLogint;
   String version = '1.0.0';
-  late SharedPreferences sharedPreferences;
+  SharedPreferences sharedPreferences = GetIt.I<SharedPreferences>();
 
   RepositoryLogin({required this.endPointLogint});
 
@@ -21,7 +21,6 @@ class RepositoryLogin {
 
   Future<void> saveLocal(ModelLogin modelLogin) async {
     if (modelLogin != null) {
-      sharedPreferences = await SharedPreferences.getInstance();
       sharedPreferences.setString(
           LOGIN_KEY, modelLogin.toJson());
     }
@@ -33,7 +32,6 @@ class RepositoryLogin {
 
   Future<ModelLogin> loadLocal() async
   {
-    sharedPreferences = await SharedPreferences.getInstance();
     String jsonString = sharedPreferences.getString(LOGIN_KEY) ?? 'VAZIO';
     if (jsonString == 'VAZIO')
       return ModelLogin();

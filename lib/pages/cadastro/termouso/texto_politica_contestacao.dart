@@ -16,14 +16,10 @@ class TextoPoliticaContestacao extends StatefulWidget {
 }
 
 class _TextoPoliticaContestacaoState extends State<TextoPoliticaContestacao> {
-  late SharedPreferences sharedPreferences;
+  SharedPreferences sharedPreferences = GetIt.I<SharedPreferences>();
 
   bool mostrarAceite = true;
 
-  Future<SharedPreferences> getSharedP() async {
-    sharedPreferences = await SharedPreferences.getInstance();
-    return sharedPreferences;
-  }
 
   Future<String> getTextoTermoContestacao() async {
     return "teste";
@@ -32,8 +28,6 @@ class _TextoPoliticaContestacaoState extends State<TextoPoliticaContestacao> {
   @override
   void initState() {
     super.initState();
-    getSharedP().then((value) {
-      sharedPreferences = value;
       if (sharedPreferences.getBool(KEY_POLITICA_CONTESTACAO) != null)
       {
         mostrarAceite = sharedPreferences.getBool(KEY_POLITICA_CONTESTACAO) ?? true;
@@ -41,9 +35,7 @@ class _TextoPoliticaContestacaoState extends State<TextoPoliticaContestacao> {
           mostrarAceite = !mostrarAceite;
         });
       }
-    });
     getTextoTermoContestacao().then((value) {});
-
   }
 
   @override

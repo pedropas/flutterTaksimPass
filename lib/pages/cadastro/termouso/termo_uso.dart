@@ -18,12 +18,7 @@ class TermoUso extends StatefulWidget {
 }
 
 class _TermoUsoState extends State<TermoUso> {
-  late SharedPreferences sharedPreferences;
-
-  Future<SharedPreferences> getTermoUso() async {
-    sharedPreferences = await SharedPreferences.getInstance();
-    return sharedPreferences;
-  }
+  SharedPreferences sharedPreferences = GetIt.I<SharedPreferences>();
 
   bool termosUsoAceitos = false;
   bool isTermoUso = false;
@@ -33,15 +28,14 @@ class _TermoUsoState extends State<TermoUso> {
   @override
   void initState() {
     super.initState();
-    getTermoUso().then((value) {
       setState(() {
-        isTermoUso = value.getBool(KEY_TERMO_USO) ?? false;
-        isPoliticaUso = value.getBool(KEY_POLITICA_USO) ?? false;
+        isTermoUso = sharedPreferences.getBool(KEY_TERMO_USO) ?? false;
+        isPoliticaUso = sharedPreferences.getBool(KEY_POLITICA_USO) ?? false;
         isPoliticaContestacao =
-            value.getBool(KEY_POLITICA_CONTESTACAO) ?? false;
+            sharedPreferences.getBool(KEY_POLITICA_CONTESTACAO) ?? false;
         termosUsoAceitos = isTermoUso && isPoliticaUso && isPoliticaContestacao;
       });
-    });
+
   }
 
   @override
