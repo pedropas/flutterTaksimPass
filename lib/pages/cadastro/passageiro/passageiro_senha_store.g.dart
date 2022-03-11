@@ -93,6 +93,14 @@ mixin _$PassageiroSenhaStore on _PassageiroSenhaStore, Store {
     });
   }
 
+  final _$enviaSenhaAsyncAction =
+      AsyncAction('_PassageiroSenhaStore.enviaSenha');
+
+  @override
+  Future<bool> enviaSenha() {
+    return _$enviaSenhaAsyncAction.run(() => super.enviaSenha());
+  }
+
   final _$_PassageiroSenhaStoreActionController =
       ActionController(name: '_PassageiroSenhaStore');
 

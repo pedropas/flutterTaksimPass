@@ -1,9 +1,9 @@
 //const URL_BASE_DEBUG = 'https://moovsp.com';
-//const URL_BASE_DEBUG = 'https://pacsistemas.ngrok.io';
-const URL_BASE_DEBUG = 'http://192.168.1.68:9090';
+const URL_BASE_DEBUG = 'https://pacsis.ngrok.io';
+//const URL_BASE_DEBUG = 'http://192.168.1.68:9090';
 const URL_BASE = 'https://moovsp.com';
 //const URL_BASE = 'https://pacsistemas.ngrok.io';
-const IS_DEBUG = false;
+const IS_DEBUG = true;
 const BASE_APP_URL = '/moov';
 const CHAVE_IV = 'Iud#9)deszvhjluE';
 

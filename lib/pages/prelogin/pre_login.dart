@@ -9,7 +9,6 @@ import '../../componentes/divider_widget.dart';
 import '../base/page_store.dart';
 
 class PreLogin extends StatefulWidget {
-
   @override
   State<PreLogin> createState() => _PreLoginState();
 }
@@ -17,14 +16,14 @@ class PreLogin extends StatefulWidget {
 class _PreLoginState extends State<PreLogin> {
   SharedPreferences sharedPreferences = GetIt.I<SharedPreferences>();
 
-  bool isTermoUso = false;
+  bool isTermoUsoGeral = false;
   int quemChamou = 0;
 
   @override
   void initState() {
     super.initState();
       setState(() {
-        isTermoUso = (sharedPreferences.getBool(KEY_TERMO_USO) ?? false)
+        isTermoUsoGeral = (sharedPreferences.getBool(KEY_TERMO_USO) ?? false)
                   && (sharedPreferences.getBool(KEY_POLITICA_USO) ?? false)
                   && (sharedPreferences.getBool(KEY_POLITICA_CONTESTACAO) ?? false);
     });
@@ -36,6 +35,7 @@ class _PreLoginState extends State<PreLogin> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
+          height: MediaQuery.of(context).size.height,
           decoration: const BoxDecoration(
             image: DecorationImage(
               image: AssetImage('assets/images/SplashPass.png'),
@@ -146,6 +146,7 @@ class _PreLoginState extends State<PreLogin> {
                 SizedBox(
                   height: 5,
                 ),
+                // botoes login google apple facebook
                 Container(
                   width: MediaQuery.of(context).size.width * 0.90,
                   child: Row(
@@ -238,7 +239,7 @@ class _PreLoginState extends State<PreLogin> {
     sharedPreferences.setBool(KEY_TERMO_USO, true);
     sharedPreferences.setBool(KEY_POLITICA_USO, true);
     sharedPreferences.setBool(KEY_POLITICA_CONTESTACAO, true);
-    isTermoUso = true;
+    isTermoUsoGeral = true;
     switch (quemChamou)
     {
       case 1:
@@ -263,7 +264,7 @@ class _PreLoginState extends State<PreLogin> {
   {
     quemChamou = 1;
     print("Ja tenho");
-    if(!isTermoUso)
+    if(!isTermoUsoGeral)
       {
         mostraMensagem();
         return;
@@ -272,7 +273,8 @@ class _PreLoginState extends State<PreLogin> {
 
   void cadastreMe() {
     quemChamou = 2;
-    if (!isTermoUso) {
+
+    if (!isTermoUsoGeral) {
       mostraMensagem();
       return;
     }
@@ -297,6 +299,9 @@ class _PreLoginState extends State<PreLogin> {
         return;
       case STATUS_PASSAGEIRO_SENHA:
         GetIt.I<PageStore>().setPage(INDICE_TELA_CADASTRO_SENHA);
+        return;
+      case STATUS_PASSAGEIRO_CAPTURA_FOTO:
+        GetIt.I<PageStore>().setPage(INDICE_TELA_CAPTURA_IMAGEM);
         return;
     }
     GetIt.I<PageStore>().setPage(INDICE_TELA_PASSAGEIRO_CADASTRO_1);
@@ -336,7 +341,7 @@ class _PreLoginState extends State<PreLogin> {
   {
     quemChamou = 3;
     print("Tipo google");
-    if(!isTermoUso)
+    if(!isTermoUsoGeral)
     {
       mostraMensagem();
       return;
@@ -347,7 +352,7 @@ class _PreLoginState extends State<PreLogin> {
   {
     quemChamou = 4;
     print("Tipo Apple");
-    if(!isTermoUso)
+    if(!isTermoUsoGeral)
     {
       mostraMensagem();
       return;
@@ -358,7 +363,7 @@ class _PreLoginState extends State<PreLogin> {
   {
     quemChamou = 5;
     print("Tipo facebook");
-    if(!isTermoUso)
+    if(!isTermoUsoGeral)
     {
       mostraMensagem();
       return;

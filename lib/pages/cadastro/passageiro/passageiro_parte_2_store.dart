@@ -63,11 +63,17 @@ abstract class _PassageiroParte2Store with Store {
       }
       else if (retorno.contains('E_MAIL_ENCONTRADO:')) {
         retorno = retorno.substring(18).trim();
-        resp = (passageiro.id == int.parse(retorno));
+        if (passageiro.senha.length == 4)
+            resp = (passageiro.id == int.parse(retorno));
+        else
+          resp = false;
       }
       else
         resp = false;
     }
+    else
+      resp = true;
+
     loading = false;
     return resp;
   }

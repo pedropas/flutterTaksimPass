@@ -42,7 +42,7 @@ dependencies:
   shared_preferences: ^2.0.13
   package_info_plus: ^1.3.0
   brasil_fields: ^1.3.1
-  image_picker: ^0.8.4+10
+  image_picker: ^0.8.4+11
   image_cropper: ^1.4.1
   google_maps_flutter: ^2.1.2
   geolocator: ^8.2.0
@@ -119,6 +119,8 @@ flutter:
     - assets/images/Brasil-Flag.png
     - assets/images/USA-Flag.png
     - assets/images/Espanha-Flag.png
+    - assets/images/selfie.png
+    - assets/images/user_icon.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

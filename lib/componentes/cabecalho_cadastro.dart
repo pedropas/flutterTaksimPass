@@ -30,24 +30,30 @@ class CabecalhoCadastro extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              OutlinedButton(
-                onPressed: retornoClicked,
-                child: Icon(
-                  FontAwesomeIcons.arrowLeft,
-                  color: BUTTON_COLOR,
-                  size: 26,
-                ),
+              Container(
+                child: mostraProgressao
+                    ? OutlinedButton(
+                        onPressed: retornoClicked,
+                        child: Icon(
+                          FontAwesomeIcons.arrowLeft,
+                          color: BUTTON_COLOR,
+                          size: 26,
+                        ),
+                      )
+                    : Container(),
               ),
               Padding(
                 padding: const EdgeInsets.only(right: 20.0),
-                child: ProgressStepper(
-                  width: 200,
-                  height: 5,
-                  color: Colors.grey,
-                  stepCount: 6,
-                  currentStep: indiceProgressao,
-                  progressColor: BUTTON_COLOR,
-                ),
+                child: mostraProgressao
+                    ? ProgressStepper(
+                        width: 200,
+                        height: 5,
+                        color: Colors.grey,
+                        stepCount: 6,
+                        currentStep: indiceProgressao,
+                        progressColor: BUTTON_COLOR,
+                      )
+                    : null,
               ),
             ],
           ),
@@ -65,15 +71,15 @@ class CabecalhoCadastro extends StatelessWidget {
             height: 10,
           ),
           Wrap(
-            alignment: WrapAlignment.center ,
+            alignment: WrapAlignment.center,
             children: <Widget>[
               Text(
                 subTitulo,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    fontFamily: "Montserrat",
-                    fontSize: 20,
-                    color: Colors.black,
+                  fontFamily: "Montserrat",
+                  fontSize: 20,
+                  color: Colors.black,
                 ),
               ),
             ],

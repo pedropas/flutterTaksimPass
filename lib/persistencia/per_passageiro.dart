@@ -16,14 +16,14 @@ class PerPassageiro
   String? retorno;
   String getRetorno() => retorno ?? '';
 
-  Future<bool> existeEmail(String email, String nome) async
+  Future<bool> existeEmail(String email, String nome, String telefone) async
   {
      try {
       retorno = await mHttp.sendCripto(
           endPoint: '/passageiro/CEL_FLU_VERIFICA_EMAIL_PASSAGEIRO',
           chave: '98745188',
           userId: email,
-          dados: nome);
+          dados: nome+"&"+telefone);
       return true;
     }
     catch(e)

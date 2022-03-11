@@ -92,7 +92,7 @@ class EntPassageiro extends BaseModelo
 
   Future<bool> exiteEmail() async
   {
-     return await perPassageiro.existeEmail(eMail, nomeCompleto);
+     return await perPassageiro.existeEmail(eMail, nomeCompleto, celular);
   }
 
    Future<bool> validaEmail() async
@@ -116,4 +116,21 @@ class EntPassageiro extends BaseModelo
       String dados = senha + "&" + (manterConectado ? 'true' : 'false');
       return await perPassageiro.enviaSenha(id.toString(), dados);
    }
+
+   Image? getImageFoto()
+   {
+      if (foto == null || foto.isEmpty)
+         return null;
+
+      Uint8List _bytesImage;
+
+      int start =foto.indexOf(',');
+      String _imgString = foto.substring(start+1);
+      print(foto.length);
+      print(_imgString.length);
+      _bytesImage = Base64Decoder().convert(_imgString);
+
+      return Image.memory(_bytesImage);
+   }
+
 }
