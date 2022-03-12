@@ -3,18 +3,15 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
-
+import 'package:taksim/pages/mapa/custon_positionaed_bem_vindo.dart';
 import '../../DataHandler/appData.dart';
 import '../../assistants/assistantMethods.dart';
-import '../../componentes/divider_widget.dart';
 import '../../componentes/drawer/custom_drawer.dart';
 import '../../componentes/progressDialog.dart';
 import '../../dominio/directDetails.dart';
-import '../search/searchScreen.dart';
 import 'custon_positionaed_cancel.dart';
 import 'custon_positionaed_ola.dart';
 import 'custon_positionaed_rider_detail.dart';
@@ -39,12 +36,13 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
   late Set<Circle> circlesSet = {};
 
   double riderDetailContainerHeight = 0;
-  double seacherContainerHeight = 245;
+  double seacherContainerHeight = 0.0;
   double requestRideContainerHeight = 0;
+  double bemVindoContainerHeight = 350.0;
 
   late Position currentPosition;
   var geoLocator = Geolocator();
-  double bottomPaddingOfMap = 0;
+  double bottomPaddingOfMap = 300.0;
 
   @override
   void initState() {
@@ -57,7 +55,8 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
     setState(() {
       seacherContainerHeight = 0;
       riderDetailContainerHeight = 270;
-      bottomPaddingOfMap = 230;
+      bottomPaddingOfMap = 250;
+      bemVindoContainerHeight = 0;
     });
   }
 
@@ -66,15 +65,25 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
       requestRideContainerHeight = 250.0;
       riderDetailContainerHeight = 0;
       bottomPaddingOfMap = 230.0;
+      bemVindoContainerHeight = 0;
     });
   }
 
   void displayDriverDetailsContainer() {
     setState(() {
       requestRideContainerHeight = 0.0;
-      riderDetailContainerHeight = 0.0;
+      riderDetailContainerHeight = 315.0;
       bottomPaddingOfMap = 295.0;
-      //driverDetailsContainerHeight = 285.0;
+      bemVindoContainerHeight = 0;
+    });
+  }
+
+  void displayBemVindoContainer() {
+    setState(() {
+      requestRideContainerHeight = 0.0;
+      riderDetailContainerHeight = 0.0;
+      bottomPaddingOfMap = 270.0;
+      bemVindoContainerHeight = 300.0;
     });
   }
 
@@ -89,10 +98,11 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
   resetApp() {
     setState(() {
 //      drawerOpen = true;
-      seacherContainerHeight = 270.0;
+      seacherContainerHeight = 0.0;
       riderDetailContainerHeight = 0;
       requestRideContainerHeight = 0;
-      bottomPaddingOfMap = 230.0;
+      bottomPaddingOfMap = 300.0;
+      bemVindoContainerHeight = 300;
 
       polylineSet.clear();
       markersSet.clear();
@@ -178,10 +188,14 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
                 _controllerGoogleMap.complete(controller);
                 newGoogleMapController = controller;
                 setState(() {
-                  bottomPaddingOfMap = 300.0;
+                  bottomPaddingOfMap = 345.0;
                 });
                 locatePosition();
               },
+            ),
+            CustonPositionBemVindo(
+              bemVindoContainerHeight: bemVindoContainerHeight,
+              displayBemVindoContainer: displayBemVindoContainer,
             ),
             // para onde
             CustonPositionedOla(
