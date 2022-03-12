@@ -53,6 +53,8 @@ abstract class _LoginScreenStore with Store {
   {
     bool resp = false;
     loading = true;
+    passageiro.eMail = email;
+    passageiro.senha = senha;
     resp = await passageiro.validaLogin();
     if (resp) {
       String retorno = passageiro.getRetorno();
@@ -62,6 +64,7 @@ abstract class _LoginScreenStore with Store {
         if (passageiro.compare(pasLido) == 'PASSAGEIRO_OK')
         {
             print(passageiro.compare(pasLido));
+            passageiro.setLocal();
         }
         else
         {

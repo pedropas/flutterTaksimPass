@@ -163,7 +163,7 @@ class _LoginScreen extends State<LoginScreen> {
     sharedPreferences.setString(KEY_STATUS_PASSAGEIRO, STATUS_PASSAGEIRO_LOGIN);
     loginScreenStore.validaLogin().then((value) {
       if (value) {
-        GetIt.I<PageStore>().setPage(INDICE_TELA_CAPTURA_IMAGEM);
+        GetIt.I<PageStore>().setPage(INDICE_TELA_BEM_VINDO_MAPA);
       } else
         showDialog(
           context: context,

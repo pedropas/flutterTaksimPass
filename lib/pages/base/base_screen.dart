@@ -17,6 +17,7 @@ import '../cadastro/passageiro/passageiro_senha.dart';
 import '../cadastro/passageiro/passageiro_valida_conta.dart';
 import '../cadastro/termouso/termo_uso.dart';
 import '../cadastro/termouso/texto_politica_uso.dart';
+import '../mapa/mapa_screen.dart';
 import '../prelogin/pre_login.dart';
 
 class BaseScreen extends StatefulWidget {
@@ -58,6 +59,7 @@ class _BaseScreenState extends State<BaseScreen> {
           PassageiroCadastroDocumento(),
           PassageiroCadastroSenha(),
           CapturaImagem(),
+          mapScreen(),
         ],
       ),
     );

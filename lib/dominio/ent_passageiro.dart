@@ -22,6 +22,7 @@ class EntPassageiro extends BaseModelo
    String foto = '';
    bool manterConectado = false;
    bool eMailValidado = false;
+   bool isLogado = false;
 
    PerPassageiro perPassageiro = PerPassageiro();
 
