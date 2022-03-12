@@ -9,18 +9,18 @@ part of 'imagem_capturada_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$ImagemCapturadaStore on _ImagemCapturadaStore, Store {
-  final _$arquivoFotoAtom = Atom(name: '_ImagemCapturadaStore.arquivoFoto');
+  final _$fotoAtom = Atom(name: '_ImagemCapturadaStore.foto');
 
   @override
-  XFile? get arquivoFoto {
-    _$arquivoFotoAtom.reportRead();
-    return super.arquivoFoto;
+  String? get foto {
+    _$fotoAtom.reportRead();
+    return super.foto;
   }
 
   @override
-  set arquivoFoto(XFile? value) {
-    _$arquivoFotoAtom.reportWrite(value, super.arquivoFoto, () {
-      super.arquivoFoto = value;
+  set foto(String? value) {
+    _$fotoAtom.reportWrite(value, super.foto, () {
+      super.foto = value;
     });
   }
 
@@ -39,34 +39,22 @@ mixin _$ImagemCapturadaStore on _ImagemCapturadaStore, Store {
     });
   }
 
-  final _$enviaDocumentoAsyncAction =
-      AsyncAction('_ImagemCapturadaStore.enviaDocumento');
+  final _$enviaFotoAsyncAction = AsyncAction('_ImagemCapturadaStore.enviaFoto');
 
   @override
-  Future<bool> enviaDocumento() {
-    return _$enviaDocumentoAsyncAction.run(() => super.enviaDocumento());
+  Future<bool> enviaFoto() {
+    return _$enviaFotoAsyncAction.run(() => super.enviaFoto());
   }
 
   final _$_ImagemCapturadaStoreActionController =
       ActionController(name: '_ImagemCapturadaStore');
 
   @override
-  void setArquivoFoto(XFile value) {
+  void setFoto(String value) {
     final _$actionInfo = _$_ImagemCapturadaStoreActionController.startAction(
-        name: '_ImagemCapturadaStore.setArquivoFoto');
+        name: '_ImagemCapturadaStore.setFoto');
     try {
-      return super.setArquivoFoto(value);
-    } finally {
-      _$_ImagemCapturadaStoreActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void passageiroLoadLocal() {
-    final _$actionInfo = _$_ImagemCapturadaStoreActionController.startAction(
-        name: '_ImagemCapturadaStore.passageiroLoadLocal');
-    try {
-      return super.passageiroLoadLocal();
+      return super.setFoto(value);
     } finally {
       _$_ImagemCapturadaStoreActionController.endAction(_$actionInfo);
     }
@@ -86,7 +74,7 @@ mixin _$ImagemCapturadaStore on _ImagemCapturadaStore, Store {
   @override
   String toString() {
     return '''
-arquivoFoto: ${arquivoFoto},
+foto: ${foto},
 loading: ${loading}
     ''';
   }

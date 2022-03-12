@@ -11,43 +11,42 @@ class ImagemCapturadaStore = _ImagemCapturadaStore with _$ImagemCapturadaStore;
 
 abstract class _ImagemCapturadaStore with Store {
 
+  SharedPreferences sharedPreferences = GetIt.I<SharedPreferences>();
+  EntPassageiro passageiro = EntPassageiro();
+
   @observable
-  XFile? arquivoFoto;
+  String? foto;
 
   @action
-  void setArquivoFoto(XFile value) => arquivoFoto = value;
+  void setFoto(String value){
+    passageiro.getLocal();
+    foto = value;
+    passageiro.foto = value;
+    passageiro.setLocal();
+  }
 
   @observable
   bool loading = false;
 
-  SharedPreferences sharedPreferences = GetIt.I<SharedPreferences>();
-  EntPassageiro passageiro = EntPassageiro();
-
-  @action
-  void passageiroLoadLocal()
-  {
-    passageiro.getLocal();
-   // arquivoFoto.
-  }
 
   @action
   void passageiroSaveLocal()
   {
     loading = true;
-    passageiro.foto = (arquivoFoto?.readAsString() as String);
+    passageiro.foto = foto ?? '';
     passageiro.setLocal();
     loading = false;
   }
 
   @action
-  Future<bool> enviaDocumento() async
+  Future<bool> enviaFoto() async
   {
     bool resp = false;
     loading = true;
-    resp = await passageiro.enviaDocumento();
+    resp = await passageiro.enviaFoto();
     if (resp) {
       String retorno = passageiro.getRetorno();
-      resp = (retorno.contains('PASSAGEIRO_DOCUMENTO_OK'));
+      resp = (retorno.contains('PASSAGEIRO_FOTO_OK'));
     }
     loading = false;
     return resp;

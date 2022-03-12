@@ -1,182 +1,188 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
-import 'package:taksim/helpers/network_const.dart';
-import 'package:taksim/pages/login/model_login.dart';
-import 'package:taksim/pages/login/repository_login.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:taksim/componentes/cabecalho_cadastro.dart';
+import 'package:taksim/componentes/custom_icon_button.dart';
+import 'package:taksim/helpers/config_screen.dart';
+import 'package:taksim/pages/cadastro/passageiro/passageiro_parte_1_store.dart';
+import 'package:taksim/pages/cadastro/passageiro/passageiro_senha_store.dart';
 
-import '../../componentes/custom_icon_button.dart';
-import '../../componentes/error_box.dart';
-import 'login_store.dart';
+import '../../../componentes/custom_text_field.dart';
+import '../base/page_store.dart';
+import 'login_screen_store.dart';
 
 class LoginScreen extends StatefulWidget {
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<LoginScreen> createState() => _LoginScreen();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreen extends State<LoginScreen> {
+  LoginScreenStore loginScreenStore = LoginScreenStore();
+  SharedPreferences sharedPreferences = GetIt.I<SharedPreferences>();
 
-  final TextEditingController userEmailController = TextEditingController();
-  final TextEditingController userSenhaController = TextEditingController();
-  final RepositoryLogin passageiroRepository = RepositoryLogin(endPointLogint: END_POINT_LOGIN_PASSAGEIRO);
-  final ModelLogin passageiroModel = ModelLogin();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController senhaController = TextEditingController();
 
-  LoginStore loginStore = LoginStore(isAppleLogin: false
-      , isGoogleLogin: false);
+  bool mostrarSenha = true;
+  IconData iconeSenha = FontAwesomeIcons.eye;
+  IconData iconeSenhaConfirmada = FontAwesomeIcons.eye;
 
-  //
   @override
-  void initState()
-  {
+  void initState() {
     super.initState();
-    passageiroRepository.loadLocal().then((value) {
-      setState(() {
-        if (value.usuario.isNotEmpty) {
-          loginStore.email = value.usuario;
-          userEmailController.text = value.usuario;
-        }
-        if (value.senha.isNotEmpty) {
-          loginStore.password = value.senha;
-          userSenhaController.text = value.senha;
-        }
-        if (value.manterConectado && value.usuario.isNotEmpty && value.senha.isNotEmpty)
-        {
-          //  loginStore.setLoginUser();
-        }
-      });
-    });
-    when((_) => loginStore.isLogado,(){
-      Navigator.of(context).pop();
-    });
+    loginScreenStore.passageiroLoadLocal();
+    if (loginScreenStore.manterConectado) {
+      emailController.text = loginScreenStore.email;
+      senhaController.text = loginScreenStore.senha;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Login'),
-        centerTitle: true,
-      ),
-      backgroundColor: Colors.transparent,
-      body: Container(
-        alignment: Alignment.center,
-        child: SingleChildScrollView(
-          child: Card(
-            margin: const EdgeInsets.symmetric(horizontal: 32),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
-            elevation: 9,
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'Acessar com E-mail:',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey[900],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 3, bottom: 4, top: 8),
-                    child: Text(
-                      'E-mail',
-                      style: TextStyle(
-                        color: Colors.grey[800],
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
-                  Observer(builder:(_){
-                  return TextField(
-                    enabled: !loginStore.loading,
-                    controller: userEmailController,
-                    decoration: InputDecoration(
-                      border: const OutlineInputBorder(),
-                      isDense: true,
-                      errorText: loginStore.emailError,
-                    ),
-                    keyboardType: TextInputType.emailAddress,
-                    onChanged: loginStore.setEmail,
-                  );}),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 3, bottom: 4, top: 8),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Senha:',
-                          style: TextStyle(
-                            color: Colors.grey[800],
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        GestureDetector(
-                          child: const Text(
-                            'Esqueceu sua senha?',
-                            style: TextStyle(
-                              decoration: TextDecoration.underline,
-                              color: Colors.purple,
-                            ),
-                          ),
-                          onTap: () {},
-                        ),
-                      ],
-                    ),
-                  ),
-                  Observer(builder:(_) {
-                    return TextField(
-                      enabled: !loginStore.loading,
-                      controller: userSenhaController,
-                      decoration: InputDecoration(
-                        border: const OutlineInputBorder(),
-                        isDense: true,
-                        errorText: loginStore.passwordError,
-                        suffix: CustomIconButton(
-                          radius: 32,
-                          iconData: loginStore.passwordVisible ? Icons.visibility: Icons.visibility_off,
-                          onTap: loginStore.togglePasswordVisibility,
-                        ),
-                      ),
-                      obscureText: !loginStore.passwordVisible,
-                      onChanged: loginStore.setPassword,
-                    );
-                  }),
-                  const SizedBox(height: 16,),
-                  Observer(builder:(_) {
-                    return Container(
-                      height: 40,
-                      child: ElevatedButton(
-                        onPressed: (loginStore.isLoginButtonOk && !loginStore.loading) ?
-                        loginStore.setLoginUser : null,
-                        child: loginStore.loading ? CircularProgressIndicator(
-                                valueColor: AlwaysStoppedAnimation(Colors.white),
-                              )
-                            : Text('ENTRAR'),
-                      ),
-                    );
-                  }),
-                  SizedBox(height: 10,),
-                  Observer(builder: (_) {
-                    return ErrorBox(
-                      message: loginStore.errorMsg,
-                    );
-                  })
-                ],
+      body: SingleChildScrollView(
+        child: Observer(builder: (_) {
+          return Column(
+            children: <Widget>[
+              CabecalhoCadastro(
+                  indiceProgressao: 6,
+                  mostraProgressao: false,
+                  titulo: "Login",
+                  subTitulo:
+                      "Acesse sua conta com os dados já cadastrados",
+                  retornoClicked: onButtonBackClick),
+              SizedBox(
+                height: 320,
               ),
-            ),
-          ),
-        ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 18.0),
+                child: CustomTextField(
+                  label: 'E-mail',
+                  hint: 'Digite seu e-mail ...',
+                  enabled: !loginScreenStore.loading,
+                  controller: emailController,
+                  onChanged: loginScreenStore.setEmail,
+                  textInputType: TextInputType.emailAddress,
+                  prefix: CustomIconButton(
+                    onTap: () {},
+                    iconData: FontAwesomeIcons.mailBulk,
+                    radius: 50,
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 18.0),
+                child: CustomTextField(
+                  label: 'Senha',
+                  hint: 'Digite senha ....',
+                  enabled: !loginScreenStore.loading,
+                  controller: senhaController,
+                  onChanged: loginScreenStore.setSenha,
+                  textInputType: TextInputType.text,
+                  obscure: mostrarSenha,
+                  suffix: CustomIconButton(
+                    onTap: () {
+                      setState(() {
+                        mostrarSenha = !mostrarSenha;
+                        if (mostrarSenha)
+                          iconeSenhaConfirmada = FontAwesomeIcons.eye;
+                        else
+                          iconeSenhaConfirmada = FontAwesomeIcons.eyeSlash;
+                      });
+                    },
+                    iconData: iconeSenhaConfirmada,
+                    radius: 50,
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              // toggle
+              Padding(
+                padding: const EdgeInsets.only(right: 18.0),
+                child: Align(
+                  alignment: Alignment.bottomRight,
+                  child: GestureDetector(
+                      onTap: () {},
+                      child: Text("Esqueci minha senha", style: TextStyle(color: BUTTON_COLOR),),
+                    ),
+                ),
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              SizedBox(
+                height: 60,
+                width: MediaQuery.of(context).size.width * .90,
+                child: Align(
+                  alignment: Alignment.bottomRight,
+                  child: SizedBox(
+                    height: 50,
+                    width: 180,
+                    child: ElevatedButton(
+                      onPressed: loginScreenStore.isFormOK
+                          ? onButtonProximoClick
+                          : null,
+                      child: loginScreenStore.loading
+                          ? CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation(Colors.white),
+                            )
+                          : Text(
+                              "ENTRAR",
+                              style: TextStyle(
+                                fontFamily: "Montserrat Bold",
+                                fontSize: 15,
+                                color: Colors.white,
+                              ),
+                            ),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 5,
+              ),
+            ],
+          );
+        }),
       ),
     );
+  }
+
+  void onButtonProximoClick() {
+    sharedPreferences.setString(KEY_STATUS_PASSAGEIRO, STATUS_PASSAGEIRO_LOGIN);
+    loginScreenStore.validaLogin().then((value) {
+      if (value) {
+        GetIt.I<PageStore>().setPage(INDICE_TELA_CAPTURA_IMAGEM);
+      } else
+        showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+            title: Text("Login Problema"),
+            content: Text(
+                "Problemas com o seu login ou senha tente novamente."),
+            actions: [
+              ElevatedButton(
+                  onPressed: () { Navigator.pop(context); },
+                  child: Text("Ok")),
+            ],
+          ),
+          barrierDismissible: false,
+        );
+    });
+  }
+
+  void onButtonBackClick() {
+    //GetIt.I<PageStore>().setPage(INDICE_TELA_CADASTRO_DOCUMENTO);
   }
 }

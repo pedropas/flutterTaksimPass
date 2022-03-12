@@ -68,6 +68,30 @@ class EntPassageiro extends BaseModelo
       if (jsonMap.containsKey('manterConectado')) manterConectado = jsonMap['manterConectado'];
    }
 
+   String compare(EntPassageiro lido)
+   {
+
+     if (id != lido.id)
+     {
+        return 'Este dados não são os mesmo gravados neste celular desaja substitui-los';
+     }
+     return "PASSAGEIRO_OK";
+   }
+
+   void atualiza(EntPassageiro lido)
+   {
+     id = lido.id;
+     nomeCompleto = lido.nomeCompleto;
+     nomeSocial = lido.nomeSocial;
+     celular = lido.celular;
+     tipoDocumento = lido.tipoDocumento;
+     documento = lido.documento;
+     foto = lido.foto;
+     manterConectado = lido.manterConectado;
+     eMail = lido.eMail;
+     setLocal();
+   }
+
    @override
    void getRemote()
    {}
@@ -111,10 +135,21 @@ class EntPassageiro extends BaseModelo
       return await perPassageiro.enviaDocumento(id.toString(), dados);
    }
 
+   Future<bool> enviaFoto() async
+   {
+     getLocal();
+      return await perPassageiro.enviaFoto(id.toString(), foto);
+   }
+
    Future<bool> enviaSenha() async
    {
       String dados = senha + "&" + (manterConectado ? 'true' : 'false');
       return await perPassageiro.enviaSenha(id.toString(), dados);
+   }
+
+   Future<bool> validaLogin() async
+   {
+     return await perPassageiro.validaLogin(eMail, senha);
    }
 
    Image? getImageFoto()
@@ -126,8 +161,6 @@ class EntPassageiro extends BaseModelo
 
       int start =foto.indexOf(',');
       String _imgString = foto.substring(start+1);
-      print(foto.length);
-      print(_imgString.length);
       _bytesImage = Base64Decoder().convert(_imgString);
 
       return Image.memory(_bytesImage);

@@ -121,4 +121,41 @@ class PerPassageiro
       return false;
     }
   }
+
+  Future<bool> enviaFoto(String idStr, String foto) async {
+    try {
+      retorno = await mHttp.sendCripto(
+          endPoint: '/passageiro/CEL_FLU_FOTO_PASSAGEIRO',
+          chave: '98745188',
+          userId: idStr,
+          dados: 'data:image/jpeg;base64,'+ foto);
+      return true;
+    }
+    catch(e)
+    {
+      retorno = e.toString();
+      if (retorno != null)
+        retorno = retorno?.replaceFirst('Exception', '');
+      return false;
+    }
+  }
+
+  Future<bool> validaLogin(String email, String senha) async
+  {
+    try {
+      retorno = await mHttp.sendCripto(
+          endPoint: '/passageiro/CEL_FLU_LOGIN_PASSAGEIRO_EMAIL',
+          chave: senha,
+          userId: email,
+          dados: senha);
+      return true;
+    }
+    catch(e)
+    {
+      retorno = e.toString();
+      if (retorno != null)
+        retorno = retorno?.replaceFirst('Exception', '');
+      return false;
+    }
+  }
 }

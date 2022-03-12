@@ -1,3 +1,7 @@
+import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -17,11 +21,15 @@ class CapturaImagem extends StatefulWidget {
 }
 
 class _CapturaImagemState extends State<CapturaImagem> {
+
   final ImagePicker _picker = ImagePicker();
 
-  String imagemCapturada = 'assets/images/user_icon.png';
   bool mostrarPainelFotoHoraSelfie = true;
   ImagemCapturadaStore imagemCapturadaStore = ImagemCapturadaStore();
+
+  Image imagemFoto = Image.asset('assets/images/user_icon.png',
+    width: 250,
+    fit: BoxFit.fill,);
 
   @override
   Widget build(BuildContext context) {
@@ -37,11 +45,7 @@ class _CapturaImagemState extends State<CapturaImagem> {
                 child: Center(
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(180),
-                    child: Image.asset(
-                      imagemCapturada,
-                      width: 250,
-                      fit: BoxFit.fill,
-                    ),
+                    child: imagemFoto,
                   ),
                 ),
               ),
@@ -201,7 +205,26 @@ class _CapturaImagemState extends State<CapturaImagem> {
 
   void onFotoAceita() {
     GetIt.I<SharedPreferences>().setString(KEY_STATUS_PASSAGEIRO, STATUS_PASSAGEIRO_CAPTURA_FOTO);
-    GetIt.I<PageStore>().setPage(INDICE_TELA_LOGIN);
+
+    imagemCapturadaStore.enviaFoto().then((value) {
+      if (value) {
+        GetIt.I<PageStore>().setPage(INDICE_TELA_LOGIN);
+      } else
+        showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+            title: Text("Foto do cadastro"),
+            content: Text(
+                "Sua foto não foi aprovada por favor tente novamente!"),
+            actions: [
+              ElevatedButton(
+                  onPressed: () { Navigator.pop(context); },
+                  child: Text("Cancelar")),
+            ],
+          ),
+          barrierDismissible: false,
+        );
+    });
   }
 
   void onVoltarCadastro() {
@@ -219,8 +242,14 @@ class _CapturaImagemState extends State<CapturaImagem> {
     _picker.pickImage(source: ImageSource.camera).then((value) {
       if (value != null) {
         setState(() {
-          imagemCapturada = value.path;
-          //       imagem.readAsString().then((value) => ());
+          File file = File(value.path);
+          Uint8List _bytesImage = file.readAsBytesSync();
+          imagemFoto = Image.memory(_bytesImage,
+            width: 250,
+            fit: BoxFit.fill,);
+
+          imagemCapturadaStore.setFoto(Base64Encoder().convert(_bytesImage));
+
           mostrarPainelFotoHoraSelfie = false;
         });
       } else {

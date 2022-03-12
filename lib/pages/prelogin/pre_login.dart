@@ -269,6 +269,9 @@ class _PreLoginState extends State<PreLogin> {
         mostraMensagem();
         return;
       }
+    else{
+      GetIt.I<PageStore>().setPage(INDICE_TELA_LOGIN);
+    }
   }
 
   void cadastreMe() {
@@ -284,6 +287,7 @@ class _PreLoginState extends State<PreLogin> {
   }
   void continuarCadastro()
   {
+
     Navigator.pop(context);
     switch (sharedPreferences.getString(KEY_STATUS_PASSAGEIRO))
     {
@@ -333,8 +337,9 @@ class _PreLoginState extends State<PreLogin> {
           ),
         barrierDismissible: false,
       );
+      return false;
     }
-    return false;
+    return true;
   }
 
   void googleLogin()
