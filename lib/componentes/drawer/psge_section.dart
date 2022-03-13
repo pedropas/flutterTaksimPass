@@ -14,7 +14,7 @@ class PageSection extends StatelessWidget {
         // Histórico
         PageTile(
           label: 'Histórico de viagem',
-          iconData: Icons.app_blocking,
+          iconData: Icons.flag,
           onTap: () {pageStore.setPage(2);},
           highlighted: pageStore.page == 2,
           isShow: pageStore.isShow,
@@ -23,7 +23,7 @@ class PageSection extends StatelessWidget {
         // Notificação
         PageTile(
           label: 'Notificação',
-          iconData: Icons.map_outlined,
+          iconData: Icons.notifications,
           onTap: () {pageStore.setPage(3);},
           highlighted: pageStore.page == 3,
           isShow: pageStore.isShow,
@@ -32,7 +32,7 @@ class PageSection extends StatelessWidget {
         // Método de pagamento
         PageTile(
           label: 'Método de pagamento',
-          iconData: Icons.person ,
+          iconData: Icons.wallet_membership ,
           onTap: () {pageStore.setPage(1);},
           highlighted: pageStore.page == 1,
           isShow: pageStore.isShow,
@@ -41,7 +41,7 @@ class PageSection extends StatelessWidget {
         // Voucher
         PageTile(
           label: 'Voucher',
-          iconData: Icons.person ,
+          iconData: Icons.airplane_ticket,
           onTap: () {pageStore.setPage(1);},
           highlighted: pageStore.page == 1,
           isShow: pageStore.isShow,
@@ -50,7 +50,7 @@ class PageSection extends StatelessWidget {
         // Destino Favorito
         PageTile(
           label: 'Destino favorito',
-          iconData: Icons.person ,
+          iconData: Icons.star ,
           onTap: () {pageStore.setPage(1);},
           highlighted: pageStore.page == 1,
           isShow: pageStore.isShow,
@@ -59,7 +59,7 @@ class PageSection extends StatelessWidget {
         // Amigos de confiança
         PageTile(
           label: 'Amigos de confiança',
-          iconData: Icons.person ,
+          iconData: Icons.verified_user ,
           onTap: () {pageStore.setPage(1);},
           highlighted: pageStore.page == 1,
           isShow: pageStore.isShow,
@@ -68,7 +68,7 @@ class PageSection extends StatelessWidget {
         // Indicar amigos
         PageTile(
           label: 'Indicar amigos',
-          iconData: Icons.person ,
+          iconData: Icons.gif_box ,
           onTap: () {pageStore.setPage(1);},
           highlighted: pageStore.page == 1,
           isShow: pageStore.isShow,
@@ -77,7 +77,7 @@ class PageSection extends StatelessWidget {
         // Resgatar cupom
         PageTile(
           label: 'Resgatar cupom',
-          iconData: Icons.person ,
+          iconData: Icons.currency_pound ,
           onTap: () {pageStore.setPage(1);},
           highlighted: pageStore.page == 1,
           isShow: pageStore.isShow,
@@ -86,7 +86,7 @@ class PageSection extends StatelessWidget {
         // Extrato
         PageTile(
           label: 'Extratoo',
-          iconData: Icons.person ,
+          iconData: Icons.report ,
           onTap: () {pageStore.setPage(1);},
           highlighted: pageStore.page == 1,
           isShow: pageStore.isShow,
@@ -95,7 +95,7 @@ class PageSection extends StatelessWidget {
         // Ajuda
         PageTile(
           label: 'Ajuda',
-          iconData: Icons.person ,
+          iconData: Icons.help ,
           onTap: () {pageStore.setPage(1);},
           highlighted: pageStore.page == 1,
           isShow: pageStore.isShow,
@@ -104,7 +104,7 @@ class PageSection extends StatelessWidget {
         // Configurações
         PageTile(
           label: 'Configurações',
-          iconData: Icons.person ,
+          iconData: Icons.help ,
           onTap: () {pageStore.setPage(1);},
           highlighted: pageStore.page == 1,
           isShow: pageStore.isShow,
@@ -113,7 +113,7 @@ class PageSection extends StatelessWidget {
         // Sair
         PageTile(
           label: 'Sair',
-          iconData: Icons.person ,
+          iconData: Icons.help ,
           onTap: () {pageStore.setPage(1);},
           highlighted: pageStore.page == 1,
           isShow: pageStore.isShow,

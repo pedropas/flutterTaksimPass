@@ -17,10 +17,10 @@ class PageTile extends StatelessWidget {
     return isShow ? ListTile(
         title: Text(label,
             style: TextStyle(
-                color: highlighted ? Colors.blue : isPronto ? Colors.grey : Colors.red[200])
+                color: Colors.black)
         ),
     leading: Icon(iconData,
-    color: highlighted ? Colors.blue : isPronto ? Colors.grey : Colors.red[200]),
+    color: highlighted ? Colors.blue : BUTTON_COLOR),
     onTap: onTap,
     enabled: isPronto,
     ) :
