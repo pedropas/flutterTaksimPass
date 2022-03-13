@@ -15,7 +15,7 @@ abstract class _PassageiroParte1Store with Store {
   void passageiroLoadLocal()
   {
     passageiro.getLocal();
-    setNomeCompleto(passageiro.nomeCompleto);
+    setNomeCompleto(passageiro.nome);
     setNomeSocial(passageiro.nomeSocial);
   }
 
@@ -45,7 +45,7 @@ abstract class _PassageiroParte1Store with Store {
   void passageiroSaveLocal()
   {
     loading = true;
-    passageiro.nomeCompleto = nomeCompleto;
+    passageiro.nome = nomeCompleto;
     passageiro.nomeSocial = nomeSocial;
     passageiro.setLocal();
     loading = false;

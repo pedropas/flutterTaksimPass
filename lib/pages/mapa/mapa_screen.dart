@@ -12,6 +12,7 @@ import '../../assistants/assistantMethods.dart';
 import '../../componentes/drawer/custom_drawer.dart';
 import '../../componentes/progressDialog.dart';
 import '../../dominio/directDetails.dart';
+import '../../dominio/ent_passageiro.dart';
 import 'custon_positionaed_cancel.dart';
 import 'custon_positionaed_ola.dart';
 import 'custon_positionaed_rider_detail.dart';
@@ -44,9 +45,15 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
   var geoLocator = Geolocator();
   double bottomPaddingOfMap = 300.0;
 
+  late EntPassageiro passageiro;
+
   @override
   void initState() {
     super.initState();
+
+    passageiro = EntPassageiro();
+    passageiro.getLocal();
+
     AssistantMethods.getCurrentOnlineUserInfo();
   }
 
@@ -62,6 +69,7 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
 
   void displayRequestRideContainer() {
     setState(() {
+      seacherContainerHeight = 0;
       requestRideContainerHeight = 250.0;
       riderDetailContainerHeight = 0;
       bottomPaddingOfMap = 230.0;
@@ -75,6 +83,7 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
       riderDetailContainerHeight = 315.0;
       bottomPaddingOfMap = 295.0;
       bemVindoContainerHeight = 0;
+      seacherContainerHeight = 0;
     });
   }
 
@@ -83,7 +92,8 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
       requestRideContainerHeight = 0.0;
       riderDetailContainerHeight = 0.0;
       bottomPaddingOfMap = 270.0;
-      bemVindoContainerHeight = 300.0;
+      bemVindoContainerHeight = 0.0;
+      seacherContainerHeight = 270;
     });
   }
 
@@ -167,7 +177,11 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
           title: const Text('Mapa'),
           centerTitle: true,
         ),
-        drawer: CustomDrawer(),
+        drawer: CustomDrawer(
+            nomeCompleto: passageiro.nome,
+            eMail: passageiro.eMail,
+            foto: passageiro.getImageFoto() ??
+                Image.asset('assets/images/user_icon.png')),
         body: Stack(
           children: [
             GoogleMap(
@@ -193,24 +207,40 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
                 locatePosition();
               },
             ),
-            CustonPositionBemVindo(
-              bemVindoContainerHeight: bemVindoContainerHeight,
-              displayBemVindoContainer: displayBemVindoContainer,
+            // Pronto vamos lá
+            Container(
+              child: false
+                  ? CustonPositionBemVindo(
+                      bemVindoContainerHeight: 350.0,
+                      displayBemVindoContainer: displayBemVindoContainer,
+                    )
+                  : null,
             ),
             // para onde
-            CustonPositionedOla(
-              seacherContainerHeight: seacherContainerHeight,
-              displayRiderDetailContainer: displayRiderDetailContainer,
+            Container(
+              child: true
+                  ? CustonPositionedOla(
+                      displayRiderDetailContainer: displayRiderDetailContainer,
+                    )
+                  : null,
             ),
             //rider detail
-            CustonPositionedRiderDetail(
-              riderDetailContainerHeight: riderDetailContainerHeight,
-              displayRequestRideContainer: displayRequestRideContainer,
+            Container(
+              child: false
+                  ? CustonPositionedRiderDetail(
+                      riderDetailContainerHeight: 270.0,
+                      displayRequestRideContainer: displayRequestRideContainer,
+                    )
+                  : null,
             ),
             // cancel wait
-            CustonPositionCancelRequest(
-              seacherContainerHeight: seacherContainerHeight,
-              displayRiderDetailContainer: displayRiderDetailContainer,
+            Container(
+              child: false
+                  ? CustonPositionCancelRequest(
+                      seacherContainerHeight: 270.0,
+                      displayRiderDetailContainer: displayRiderDetailContainer,
+                    )
+                  : null,
             ),
           ],
         ),

@@ -58,7 +58,7 @@ class _LoginScreen extends State<LoginScreen> {
                       "Acesse sua conta com os dados já cadastrados",
                   retornoClicked: onButtonBackClick),
               SizedBox(
-                height: 320,
+                height: 280,
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 18.0),

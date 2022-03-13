@@ -11,7 +11,7 @@ import '../persistencia/per_passageiro.dart';
 class EntPassageiro extends BaseModelo
 {
 
-   String nomeCompleto = '';
+   String nome = '';
    String nomeSocial = '';
    String eMail = '';
    String celular = '';
@@ -36,7 +36,7 @@ class EntPassageiro extends BaseModelo
    Map<String, dynamic> preparToJson() {
       return {
       'id': id,
-      'nomeCompleto': nomeCompleto,
+      'nome': nome,
       'nomeSocial':nomeSocial,
       'eMail':eMail,
       'celular':celular,
@@ -57,7 +57,7 @@ class EntPassageiro extends BaseModelo
 
       Map<String, dynamic> jsonMap = json.decode(jsonString);
       if (jsonMap.containsKey('id')) id = jsonMap['id'];
-      if (jsonMap.containsKey('nomeCompleto')) nomeCompleto = jsonMap['nomeCompleto'];
+      if (jsonMap.containsKey('nome')) nome = jsonMap['nome'];
       if (jsonMap.containsKey('nomeSocial')) nomeSocial = jsonMap['nomeSocial'];
       if (jsonMap.containsKey('eMail')) eMail = jsonMap['eMail'];
       if (jsonMap.containsKey('celular')) celular = jsonMap['celular'];
@@ -76,13 +76,14 @@ class EntPassageiro extends BaseModelo
      {
         return 'Este dados não são os mesmo gravados neste celular desaja substitui-los';
      }
+     atualiza(lido);
      return "PASSAGEIRO_OK";
    }
 
    void atualiza(EntPassageiro lido)
    {
      id = lido.id;
-     nomeCompleto = lido.nomeCompleto;
+     nome = lido.nome;
      nomeSocial = lido.nomeSocial;
      celular = lido.celular;
      tipoDocumento = lido.tipoDocumento;
@@ -117,7 +118,7 @@ class EntPassageiro extends BaseModelo
 
   Future<bool> exiteEmail() async
   {
-     return await perPassageiro.existeEmail(eMail, nomeCompleto, celular);
+     return await perPassageiro.existeEmail(eMail, nome, celular);
   }
 
    Future<bool> validaEmail() async

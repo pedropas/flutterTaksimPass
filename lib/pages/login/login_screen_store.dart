@@ -63,7 +63,6 @@ abstract class _LoginScreenStore with Store {
         pasLido.fromJson(retorno);
         if (passageiro.compare(pasLido) == 'PASSAGEIRO_OK')
         {
-            print(passageiro.compare(pasLido));
             passageiro.setLocal();
         }
         else

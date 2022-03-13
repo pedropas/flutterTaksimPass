@@ -15,7 +15,7 @@ class CustonPositionBemVindo extends StatefulWidget {
       : super(key: key);
 
   final double bemVindoContainerHeight;
-  final Function displayBemVindoContainer;
+  final VoidCallback displayBemVindoContainer;
 
   @override
   _CustonPositionBemVindoState createState() => _CustonPositionBemVindoState(
@@ -24,8 +24,9 @@ class CustonPositionBemVindo extends StatefulWidget {
 }
 
 class _CustonPositionBemVindoState extends State<CustonPositionBemVindo> {
+
   double bemVindoContainerHeight = 0;
-  late Function displayBemVindoContainer;
+  VoidCallback displayBemVindoContainer;
 
   _CustonPositionBemVindoState(
       {required this.bemVindoContainerHeight,
@@ -89,7 +90,7 @@ class _CustonPositionBemVindoState extends State<CustonPositionBemVindo> {
                   child:
                       Expanded(
                         child: ElevatedButton(
-                            onPressed: (){},
+                            onPressed: displayBemVindoContainer,
                             child: Text("COMEÇAR")),
                       ),
                   ),

@@ -1,28 +1,32 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:taksim/helpers/config_screen.dart';
 
 import '../../DataHandler/appData.dart';
+import '../../componentes/custom_button.dart';
+import '../../componentes/custom_button_Icon.dart';
 import '../../componentes/divider_widget.dart';
 import '../search/searchScreen.dart';
 
 class CustonPositionedOla extends StatefulWidget {
-  const CustonPositionedOla({Key? key,required this.seacherContainerHeight, required this.displayRiderDetailContainer}) : super(key: key);
+  const CustonPositionedOla(
+      {Key? key, required this.displayRiderDetailContainer})
+      : super(key: key);
 
-  final double seacherContainerHeight;
   final Function displayRiderDetailContainer;
 
   @override
-  _CustonPositionedOlaState createState() => _CustonPositionedOlaState(seacherContainerHeight: seacherContainerHeight,
+  _CustonPositionedOlaState createState() => _CustonPositionedOlaState(
       displayRiderDetailContainer: displayRiderDetailContainer);
 }
 
 class _CustonPositionedOlaState extends State<CustonPositionedOla> {
-
-  double seacherContainerHeight = 0;
+  double seacherContainerHeight = 350.0;
   late Function displayRiderDetailContainer;
 
-  _CustonPositionedOlaState({required this.seacherContainerHeight, required this.displayRiderDetailContainer });
+  _CustonPositionedOlaState({required this.displayRiderDetailContainer});
 
   @override
   Widget build(BuildContext context) {
@@ -50,22 +54,65 @@ class _CustonPositionedOlaState extends State<CustonPositionedOla> {
             ],
           ),
           child: Padding(
-            padding: const EdgeInsets.symmetric(
-                horizontal: 24.0, vertical: 18.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 24.0, vertical: 18.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
-                  height: 6.0,
+                  height: 60,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: CustomButtonIcon(
+                          onTap: () {},
+                          label: 'Convênio',
+                          prefix: false,
+                          suffix: true,
+                          icon: FontAwesomeIcons.solidEdit,
+                          enabled: true,
+                          backgroundCor: Colors.blue,
+                          elevacao: 2,
+                          espaco: 30.0,
+                          textoCor: Colors.white,
+                          radius: 30,
+                          fontSize: 20,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 15,
+                      ),
+                      Expanded(
+                        child: CustomButtonIcon(
+                          onTap: () {},
+                          label: 'QR Code',
+                          prefix: false,
+                          suffix: true,
+                          icon: FontAwesomeIcons.qrcode,
+                          enabled: true,
+                          backgroundCor: BUTTON_COLOR,
+                          elevacao: 2,
+                          espaco: 30.0,
+                          textoCor: Colors.white,
+                          radius: 30,
+                          fontSize: 20,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                Text(
-                  "Olá, ",
-                  style: TextStyle(fontSize: 14.0),
+                SizedBox(
+                  height: 26.0,
                 ),
-                Text(
-                  "Para onde vamos?",
-                  style: TextStyle(
-                      fontSize: 20.0, fontFamily: "Brand Bold"),
+                SizedBox(
+                  width: double.infinity,
+                  height: 30,
+                  child: Container(
+                    child: Text(
+                      "Olá, ",
+                      style: TextStyle(fontSize: 20.0),
+                    ),
+                  ),
                 ),
                 SizedBox(
                   height: 10.0,
@@ -102,7 +149,7 @@ class _CustonPositionedOlaState extends State<CustonPositionedOla> {
                             color: Colors.black,
                           ),
                           SizedBox(width: 10.0),
-                          Text("Buscar endereço"),
+                          Text("Para onde vamos?"),
                         ],
                       ),
                     ),
@@ -124,11 +171,11 @@ class _CustonPositionedOlaState extends State<CustonPositionedOla> {
                         Wrap(
                           children: [
                             Text(
-                              Provider.of<AppData>(context)
-                                  .pickUpLocation != null
+                              Provider.of<AppData>(context).pickUpLocation !=
+                                      null
                                   ? Provider.of<AppData>(context)
-                                  .pickUpLocation
-                                  .placeName
+                                      .pickUpLocation
+                                      .placeName
                                   : 'Seu Endereço',
                               style: TextStyle(
                                   color: Colors.black, fontSize: 12.0),
@@ -140,8 +187,7 @@ class _CustonPositionedOlaState extends State<CustonPositionedOla> {
                         ),
                         Text(
                           "Seu Endereço",
-                          style: TextStyle(
-                              color: Colors.blue, fontSize: 12.0),
+                          style: TextStyle(color: Colors.blue, fontSize: 12.0),
                         ),
                       ],
                     )
@@ -170,8 +216,7 @@ class _CustonPositionedOlaState extends State<CustonPositionedOla> {
                         ),
                         Text(
                           "Seu Serviço",
-                          style: TextStyle(
-                              color: Colors.blue, fontSize: 12.0),
+                          style: TextStyle(color: Colors.blue, fontSize: 12.0),
                         ),
                       ],
                     )
