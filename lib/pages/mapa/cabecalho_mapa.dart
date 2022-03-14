@@ -5,11 +5,16 @@ import 'package:taksim/componentes/custom_icon_button.dart';
 import 'package:taksim/helpers/config_screen.dart';
 
 class CabecalhoMapa extends StatelessWidget {
-  const CabecalhoMapa({required this.origem, required this.destino, Key? key})
+  const CabecalhoMapa(
+      {required this.origem,
+      required this.destino,
+      required this.onRetornoClicked,
+      Key? key})
       : super(key: key);
 
   final String origem;
   final String destino;
+  final VoidCallback onRetornoClicked;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +42,10 @@ class CabecalhoMapa extends StatelessWidget {
                   ],
                 ),
                 child: CustomIconButton(
-                    radius: 10, iconData: Icons.arrow_back, cor: BUTTON_COLOR, onTap: () {}),
+                    radius: 10,
+                    iconData: Icons.arrow_back,
+                    cor: BUTTON_COLOR,
+                    onTap: onRetornoClicked),
               ),
             ),
             SizedBox(
@@ -47,7 +55,9 @@ class CabecalhoMapa extends StatelessWidget {
               height: 40,
               width: 280,
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 10,),
+                padding: EdgeInsets.symmetric(
+                  horizontal: 10,
+                ),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   boxShadow: [
@@ -61,9 +71,27 @@ class CabecalhoMapa extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    Expanded(child: Text(origem, style: TextStyle(fontFamily: "Montserrat Bold", fontSize: 10,),)),
-                    Text("> ",style: TextStyle(fontFamily: "Montserrat Bold", color: BUTTON_COLOR),),
-                    Expanded(child: Text(destino,style: TextStyle(fontFamily: "Montserrat Bold", fontSize: 10,),)),
+                    Expanded(
+                        child: Text(
+                      origem,
+                      style: TextStyle(
+                        fontFamily: "Montserrat Bold",
+                        fontSize: 10,
+                      ),
+                    )),
+                    Text(
+                      "> ",
+                      style: TextStyle(
+                          fontFamily: "Montserrat Bold", color: BUTTON_COLOR),
+                    ),
+                    Expanded(
+                        child: Text(
+                      destino,
+                      style: TextStyle(
+                        fontFamily: "Montserrat Bold",
+                        fontSize: 10,
+                      ),
+                    )),
                     const Icon(
                       Icons.edit_location_alt,
                       color: BUTTON_COLOR,

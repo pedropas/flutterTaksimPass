@@ -2,7 +2,7 @@
 const URL_BASE_DEBUG = 'https://pacsis.ngrok.io';
 //const URL_BASE_DEBUG = 'http://192.168.43.23:9090/';
 const URL_BASE = 'https://moovsp.com';
-const IS_DEBUG = true;
+const IS_DEBUG = false;
 const BASE_APP_URL = '/moov';
 const CHAVE_IV = 'Iud#9)deszvhjluE';
 

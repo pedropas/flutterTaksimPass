@@ -41,7 +41,7 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
   bool showOlaContainer = false;
   bool showCancelContainer = false;
   bool showBemVindoContainer = true;
-  bool showCabecalhoMapa = true;
+  bool showCabecalhoMapa = false;
 
   String enderecoOrigem = 'Não Informado';
   String enderecoDestino = 'Não Informado';
@@ -67,8 +67,9 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
     setState(() {
       showBemVindoContainer = false;
       showOlaContainer = false;
+      showCabecalhoMapa = true;
       showRiderDetailContainer = true;
-      bottomPaddingOfMap = 230.0;
+      bottomPaddingOfMap = 500.0;
     });
   }
 
@@ -89,6 +90,7 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
       showRiderDetailContainer = false;
       showBemVindoContainer = false;
       showOlaContainer = true;
+      showCabecalhoMapa = false;
     });
   }
 
@@ -200,7 +202,7 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
             ),
             Container(
               child: showCabecalhoMapa
-                  ? CabecalhoMapa(origem: enderecoOrigem, destino: enderecoDestino)
+                  ? CabecalhoMapa(origem: enderecoOrigem, destino: enderecoDestino,onRetornoClicked: voltarTela,)
                   : null,
             ),
             // Pronto vamos lá
@@ -375,5 +377,10 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
       circlesSet.add(pickUpLocCircle);
       circlesSet.add(dropOffLocCircle);
     });
+  }
+
+  void voltarTela()
+  {
+    displayBemVindoContainer();
   }
 }
