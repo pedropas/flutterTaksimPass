@@ -28,14 +28,19 @@ bool jaEscolheuIdioma()
 void moveTelaCorreta(bool value)
 {
   if (value) {
-    bool entrarAutomatico = false;
     if (GetIt.I<SharedPreferences>().containsKey(KEY_PASSAGEIRO)) {
       EntPassageiro passageiro = EntPassageiro();
-      String? json = GetIt.I<SharedPreferences>().getString(KEY_PASSAGEIRO);
-      passageiro.fromJson(json??"");
-      entrarAutomatico = passageiro.manterConectado;
-      if (passageiro.eMailValidado)
-        GetIt.I<PageStore>().setPage(INDICE_TELA_BEM_VINDO_MAPA);
+      passageiro.getLocal();
+      if (passageiro.emailValidado && passageiro.manterConectado) {
+        // valida senha
+        passageiro.validaLogin().then((value) {
+          if (value)
+          {
+            GetIt.I<PageStore>().setPage(INDICE_TELA_BEM_VINDO_MAPA);
+          }
+        });
+        return;
+      }
     }
     GetIt.I<PageStore>().setPage(INDICE_TELA_ON_BOARD);
   }

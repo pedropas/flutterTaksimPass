@@ -6,6 +6,7 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
+import 'package:taksim/pages/mapa/cabecalho_mapa.dart';
 import 'package:taksim/pages/mapa/custon_positionaed_bem_vindo.dart';
 import '../../DataHandler/appData.dart';
 import '../../assistants/assistantMethods.dart';
@@ -36,10 +37,14 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
   late Set<Marker> markersSet = {};
   late Set<Circle> circlesSet = {};
 
-  double riderDetailContainerHeight = 0;
-  double seacherContainerHeight = 0.0;
-  double requestRideContainerHeight = 0;
-  double bemVindoContainerHeight = 350.0;
+  bool showRiderDetailContainer = false;
+  bool showOlaContainer = false;
+  bool showCancelContainer = false;
+  bool showBemVindoContainer = true;
+  bool showCabecalhoMapa = true;
+
+  String enderecoOrigem = 'Não Informado';
+  String enderecoDestino = 'Não Informado';
 
   late Position currentPosition;
   var geoLocator = Geolocator();
@@ -60,40 +65,30 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
   void displayRiderDetailContainer() async {
     await getPlaceDirection();
     setState(() {
-      seacherContainerHeight = 0;
-      riderDetailContainerHeight = 270;
-      bottomPaddingOfMap = 250;
-      bemVindoContainerHeight = 0;
+      showBemVindoContainer = false;
+      showOlaContainer = false;
+      showRiderDetailContainer = true;
+      bottomPaddingOfMap = 230.0;
     });
   }
 
   void displayRequestRideContainer() {
     setState(() {
-      seacherContainerHeight = 0;
-      requestRideContainerHeight = 250.0;
-      riderDetailContainerHeight = 0;
       bottomPaddingOfMap = 230.0;
-      bemVindoContainerHeight = 0;
     });
   }
 
   void displayDriverDetailsContainer() {
     setState(() {
-      requestRideContainerHeight = 0.0;
-      riderDetailContainerHeight = 315.0;
       bottomPaddingOfMap = 295.0;
-      bemVindoContainerHeight = 0;
-      seacherContainerHeight = 0;
     });
   }
 
   void displayBemVindoContainer() {
     setState(() {
-      requestRideContainerHeight = 0.0;
-      riderDetailContainerHeight = 0.0;
-      bottomPaddingOfMap = 270.0;
-      bemVindoContainerHeight = 0.0;
-      seacherContainerHeight = 270;
+      showRiderDetailContainer = false;
+      showBemVindoContainer = false;
+      showOlaContainer = true;
     });
   }
 
@@ -107,12 +102,7 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
 
   resetApp() {
     setState(() {
-//      drawerOpen = true;
-      seacherContainerHeight = 0.0;
-      riderDetailContainerHeight = 0;
-      requestRideContainerHeight = 0;
       bottomPaddingOfMap = 300.0;
-      bemVindoContainerHeight = 300;
 
       polylineSet.clear();
       markersSet.clear();
@@ -173,13 +163,14 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Mapa'),
-          centerTitle: true,
-        ),
+        // appBar: AppBar(
+        //   title: const Text('Mapa'),
+        //   centerTitle: true,
+        //   backgroundColor: Colors.transparent,
+        // ),
         drawer: CustomDrawer(
             nomeCompleto: passageiro.nome,
-            eMail: passageiro.eMail,
+            eMail: passageiro.email,
             foto: passageiro.getImageFoto() ??
                 Image.asset('assets/images/user_icon.png')),
         body: Stack(
@@ -207,9 +198,14 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
                 locatePosition();
               },
             ),
+            Container(
+              child: showCabecalhoMapa
+                  ? CabecalhoMapa(origem: enderecoOrigem, destino: enderecoDestino)
+                  : null,
+            ),
             // Pronto vamos lá
             Container(
-              child: false
+              child: showBemVindoContainer
                   ? CustonPositionBemVindo(
                       bemVindoContainerHeight: 350.0,
                       displayBemVindoContainer: displayBemVindoContainer,
@@ -218,30 +214,30 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
             ),
             // para onde
             Container(
-              child: true
+              child: showOlaContainer
                   ? CustonPositionedOla(
-                      displayRiderDetailContainer: displayRiderDetailContainer,
+                      displayOlalContainer: displayRiderDetailContainer,
+                      nomePassageiro: passageiro.nomeSocial,
                     )
                   : null,
             ),
             //rider detail
             Container(
-              child: false
+              child: showRiderDetailContainer
                   ? CustonPositionedRiderDetail(
-                      riderDetailContainerHeight: 270.0,
                       displayRequestRideContainer: displayRequestRideContainer,
                     )
                   : null,
             ),
-            // cancel wait
-            Container(
-              child: false
-                  ? CustonPositionCancelRequest(
-                      seacherContainerHeight: 270.0,
-                      displayRiderDetailContainer: displayRiderDetailContainer,
-                    )
-                  : null,
-            ),
+            // // cancel wait
+            // Container(
+            //   child: false
+            //       ? CustonPositionCancelRequest(
+            //           seacherContainerHeight: 270.0,
+            //           displayRiderDetailContainer: displayRiderDetailContainer,
+            //         )
+            //       : null,
+            // ),
           ],
         ),
       ),
@@ -255,6 +251,9 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
 
     var pickUpLatLng = LatLng(initialPos.latitude, initialPos.longitude);
     var dropOffLatLng = LatLng(finalPos.latitude, finalPos.longitude);
+
+    enderecoOrigem = initialPos.placeName;
+    enderecoDestino = finalPos.placeName;
 
     showDialog(
         context: context,

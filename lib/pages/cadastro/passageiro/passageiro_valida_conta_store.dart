@@ -16,7 +16,7 @@ abstract class _PassageiroValidaContaStore with Store {
   void passageiroLoadLocal()
   {
     passageiro.getLocal();
-    setEmailTemp(passageiro.eMail);
+    setEmailTemp(passageiro.email);
   }
 
   @observable
@@ -73,7 +73,7 @@ abstract class _PassageiroValidaContaStore with Store {
     if (resp) {
       String retorno = passageiro.getRetorno();
       resp = (retorno.contains('PASSAGEIRO_VALIDADO'));
-      passageiro.eMailValidado = resp;
+      passageiro.emailValidado = resp;
     }
     loading = false;
     return resp;

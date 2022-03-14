@@ -17,7 +17,7 @@ abstract class _LoginScreenStore with Store {
     passageiro.getLocal();
     setSenha(passageiro.senha);
     setManterConectado(passageiro.manterConectado);
-    setEmail(passageiro.eMail);
+    setEmail(passageiro.email);
   }
 
   @observable
@@ -53,24 +53,9 @@ abstract class _LoginScreenStore with Store {
   {
     bool resp = false;
     loading = true;
-    passageiro.eMail = email;
+    passageiro.email = email;
     passageiro.senha = senha;
     resp = await passageiro.validaLogin();
-    if (resp) {
-      String retorno = passageiro.getRetorno();
-      if (retorno != 'LOGIN') {
-        EntPassageiro pasLido = EntPassageiro();
-        pasLido.fromJson(retorno);
-        if (passageiro.compare(pasLido) == 'PASSAGEIRO_OK')
-        {
-            passageiro.setLocal();
-        }
-        else
-        {
-          passageiro.atualiza(pasLido);
-        }
-      }
-    }
     loading = false;
     return resp;
   }

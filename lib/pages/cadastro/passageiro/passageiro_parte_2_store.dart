@@ -18,7 +18,7 @@ abstract class _PassageiroParte2Store with Store {
   void passageiroLoadLocal()
   {
     passageiro.getLocal();
-    setEmail(passageiro.eMail);
+    setEmail(passageiro.email);
     setCelular(passageiro.celular);
   }
 
@@ -51,7 +51,7 @@ abstract class _PassageiroParte2Store with Store {
   {
     bool resp = false;
     loading = true;
-    passageiro.eMail = email;
+    passageiro.email = email;
     passageiro.celular = celular;
     resp = await passageiro.exiteEmail();
     if (resp) {
@@ -82,7 +82,7 @@ abstract class _PassageiroParte2Store with Store {
   void passageiroSaveLocal()
   {
     loading = true;
-    passageiro.eMail = email;
+    passageiro.email = email;
     passageiro.celular = celular;
     passageiro.setLocal();
     loading = false;

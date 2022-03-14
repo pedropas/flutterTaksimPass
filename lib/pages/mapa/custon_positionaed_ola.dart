@@ -3,30 +3,34 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:taksim/helpers/config_screen.dart';
-
 import '../../DataHandler/appData.dart';
-import '../../componentes/custom_button.dart';
 import '../../componentes/custom_button_Icon.dart';
 import '../../componentes/divider_widget.dart';
 import '../search/searchScreen.dart';
 
 class CustonPositionedOla extends StatefulWidget {
   const CustonPositionedOla(
-      {Key? key, required this.displayRiderDetailContainer})
+      {Key? key,
+      required this.displayOlalContainer,
+      required this.nomePassageiro})
       : super(key: key);
 
-  final Function displayRiderDetailContainer;
+  final Function displayOlalContainer;
+  final String nomePassageiro;
 
   @override
   _CustonPositionedOlaState createState() => _CustonPositionedOlaState(
-      displayRiderDetailContainer: displayRiderDetailContainer);
+      displayOlalContainer: displayOlalContainer,
+      nomePassageiro: nomePassageiro);
 }
 
 class _CustonPositionedOlaState extends State<CustonPositionedOla> {
-  double seacherContainerHeight = 350.0;
-  late Function displayRiderDetailContainer;
+  double olarContainerHeight = 350.0;
+  final Function displayOlalContainer;
+  final String nomePassageiro;
 
-  _CustonPositionedOlaState({required this.displayRiderDetailContainer});
+  _CustonPositionedOlaState(
+      {required this.displayOlalContainer, required this.nomePassageiro});
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +42,7 @@ class _CustonPositionedOlaState extends State<CustonPositionedOla> {
         duration: Duration(milliseconds: 160),
         curve: Curves.bounceIn,
         child: Container(
-          height: seacherContainerHeight,
+          height: olarContainerHeight,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.only(
@@ -60,56 +64,69 @@ class _CustonPositionedOlaState extends State<CustonPositionedOla> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
-                  height: 60,
+                  height: 45,
                   child: Row(
                     children: [
-                      Expanded(
-                        child: CustomButtonIcon(
-                          onTap: () {},
-                          label: 'Convênio',
-                          prefix: false,
-                          suffix: true,
-                          icon: FontAwesomeIcons.solidEdit,
-                          enabled: true,
-                          backgroundCor: Colors.blue,
-                          elevacao: 2,
-                          espaco: 30.0,
-                          textoCor: Colors.white,
-                          radius: 30,
-                          fontSize: 20,
-                        ),
+                      CustomButtonIcon(
+                        onTap: () {},
+                        label: 'Convênio',
+                        prefix: false,
+                        suffix: true,
+                        icon: FontAwesomeIcons.solidEdit,
+                        enabled: true,
+                        backgroundCor: Colors.blue,
+                        elevacao: 2,
+                        espaco: 30.0,
+                        textoCor: Colors.white,
+                        radius: 30,
+                        fontSize: 20,
                       ),
                       SizedBox(
                         width: 15,
                       ),
-                      Expanded(
-                        child: CustomButtonIcon(
-                          onTap: () {},
-                          label: 'QR Code',
-                          prefix: false,
-                          suffix: true,
-                          icon: FontAwesomeIcons.qrcode,
-                          enabled: true,
-                          backgroundCor: BUTTON_COLOR,
-                          elevacao: 2,
-                          espaco: 30.0,
-                          textoCor: Colors.white,
-                          radius: 30,
-                          fontSize: 20,
-                        ),
+                      CustomButtonIcon(
+                        onTap: () {},
+                        label: 'QR Code',
+                        prefix: false,
+                        suffix: true,
+                        icon: FontAwesomeIcons.qrcode,
+                        enabled: true,
+                        backgroundCor: BUTTON_COLOR,
+                        elevacao: 2,
+                        espaco: 30.0,
+                        textoCor: Colors.white,
+                        radius: 30,
+                        fontSize: 20,
                       ),
                     ],
                   ),
                 ),
                 SizedBox(
-                  height: 26.0,
+                  height: 10.0,
+                ),
+                CustomButtonIcon(
+                  onTap: () {},
+                  label: 'Só quero um taxi',
+                  prefix: false,
+                  suffix: true,
+                  icon: FontAwesomeIcons.taxi,
+                  enabled: true,
+                  backgroundCor: Colors.teal,
+                  elevacao: 2,
+                  espaco: 145.0,
+                  textoCor: Colors.white,
+                  radius: 30,
+                  fontSize: 20,
+                ),
+                SizedBox(
+                  height: 16.0,
                 ),
                 SizedBox(
                   width: double.infinity,
                   height: 30,
                   child: Container(
                     child: Text(
-                      "Olá, ",
+                      "Olá, $nomePassageiro",
                       style: TextStyle(fontSize: 20.0),
                     ),
                   ),
@@ -124,7 +141,7 @@ class _CustonPositionedOlaState extends State<CustonPositionedOla> {
                         MaterialPageRoute(
                             builder: (context) => SearchScreen()));
                     if (res == "obtainDirection") {
-                      displayRiderDetailContainer();
+                      displayOlalContainer();
                     }
                   },
                   child: Container(

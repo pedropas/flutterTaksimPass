@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_it/get_it.dart';
 import 'package:taksim/componentes/drawer/page_tile.dart';
 
@@ -85,8 +86,8 @@ class PageSection extends StatelessWidget {
         ),
         // Extrato
         PageTile(
-          label: 'Extratoo',
-          iconData: Icons.report ,
+          label: 'Extrato',
+          iconData: Icons.wordpress,
           onTap: () {pageStore.setPage(1);},
           highlighted: pageStore.page == 1,
           isShow: pageStore.isShow,
@@ -104,7 +105,7 @@ class PageSection extends StatelessWidget {
         // Configurações
         PageTile(
           label: 'Configurações',
-          iconData: Icons.help ,
+          iconData: Icons.settings ,
           onTap: () {pageStore.setPage(1);},
           highlighted: pageStore.page == 1,
           isShow: pageStore.isShow,
@@ -113,7 +114,7 @@ class PageSection extends StatelessWidget {
         // Sair
         PageTile(
           label: 'Sair',
-          iconData: Icons.help ,
+          iconData: Icons.exit_to_app ,
           onTap: () {pageStore.setPage(1);},
           highlighted: pageStore.page == 1,
           isShow: pageStore.isShow,

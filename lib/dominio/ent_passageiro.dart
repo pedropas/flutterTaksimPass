@@ -10,10 +10,9 @@ import '../persistencia/per_passageiro.dart';
 
 class EntPassageiro extends BaseModelo
 {
-
    String nome = '';
    String nomeSocial = '';
-   String eMail = '';
+   String email = '';
    String celular = '';
    String tipoDocumento = '';
    String documento = '';
@@ -21,7 +20,7 @@ class EntPassageiro extends BaseModelo
    String senha = '';
    String foto = '';
    bool manterConectado = false;
-   bool eMailValidado = false;
+   bool emailValidado = false;
    bool isLogado = false;
 
    PerPassageiro perPassageiro = PerPassageiro();
@@ -38,14 +37,15 @@ class EntPassageiro extends BaseModelo
       'id': id,
       'nome': nome,
       'nomeSocial':nomeSocial,
-      'eMail':eMail,
+      'email':email,
       'celular':celular,
       'tipoDocumento':tipoDocumento,
       'documento':documento,
       'codigoVerificacao':codigoVerificacao,
       'senha':senha,
       'foto':foto,
-      'manterConectado':manterConectado
+      'manterConectado':manterConectado,
+      'emailValidado':emailValidado,
       };
    }
 
@@ -59,7 +59,7 @@ class EntPassageiro extends BaseModelo
       if (jsonMap.containsKey('id')) id = jsonMap['id'];
       if (jsonMap.containsKey('nome')) nome = jsonMap['nome'];
       if (jsonMap.containsKey('nomeSocial')) nomeSocial = jsonMap['nomeSocial'];
-      if (jsonMap.containsKey('eMail')) eMail = jsonMap['eMail'];
+      if (jsonMap.containsKey('email')) email = jsonMap['email'];
       if (jsonMap.containsKey('celular')) celular = jsonMap['celular'];
       if (jsonMap.containsKey('tipoDocumento')) tipoDocumento = jsonMap['tipoDocumento'];
       if (jsonMap.containsKey('documento')) documento = jsonMap['documento'];
@@ -67,11 +67,11 @@ class EntPassageiro extends BaseModelo
       if (jsonMap.containsKey('senha')) senha = jsonMap['senha'];
       if (jsonMap.containsKey('foto')) foto = jsonMap['foto'];
       if (jsonMap.containsKey('manterConectado')) manterConectado = jsonMap['manterConectado'];
+      if (jsonMap.containsKey('emailValidado')) emailValidado = jsonMap['emailValidado'];
    }
 
    String compare(EntPassageiro lido)
    {
-
      if (id != lido.id)
      {
         return 'Este dados não são os mesmo gravados neste celular desaja substitui-los';
@@ -90,7 +90,8 @@ class EntPassageiro extends BaseModelo
      documento = lido.documento;
      foto = lido.foto;
      manterConectado = lido.manterConectado;
-     eMail = lido.eMail;
+     email = lido.email;
+     emailValidado = lido.emailValidado;
      setLocal();
    }
 
@@ -118,7 +119,7 @@ class EntPassageiro extends BaseModelo
 
   Future<bool> exiteEmail() async
   {
-     return await perPassageiro.existeEmail(eMail, nome, celular);
+     return await perPassageiro.existeEmail(email, nome, celular);
   }
 
    Future<bool> validaEmail() async
@@ -151,7 +152,19 @@ class EntPassageiro extends BaseModelo
 
    Future<bool> validaLogin() async
    {
-     return await perPassageiro.validaLogin(eMail, senha);
+     bool resp = await perPassageiro.validaLogin(email, senha);
+     String retorno = getRetorno();
+     if (!retorno.contains('LOGIN')) {
+       EntPassageiro pasLido = EntPassageiro();
+       pasLido.fromJson(retorno);
+       if (compare(pasLido) != 'PASSAGEIRO_OK')
+       {
+         resp = false;
+       }
+     }
+     else
+       resp = false;
+     return resp;
    }
 
    Image? getImageFoto()

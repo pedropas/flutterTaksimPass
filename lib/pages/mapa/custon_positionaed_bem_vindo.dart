@@ -88,11 +88,9 @@ class _CustonPositionBemVindoState extends State<CustonPositionBemVindo> {
                   width: MediaQuery.of(context).size.width * 0.95,
                   height: 50,
                   child:
-                      Expanded(
-                        child: ElevatedButton(
-                            onPressed: displayBemVindoContainer,
-                            child: Text("COMEÇAR")),
-                      ),
+                      ElevatedButton(
+                          onPressed: displayBemVindoContainer,
+                          child: Text("COMEÇAR")),
                   ),
               ],
             ),
