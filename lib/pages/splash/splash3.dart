@@ -38,6 +38,10 @@ void moveTelaCorreta(bool value)
           {
             GetIt.I<PageStore>().setPage(INDICE_TELA_BEM_VINDO_MAPA);
           }
+          else
+          {
+            GetIt.I<PageStore>().setPage(INDICE_TELA_PRE_LOGIN);
+          }
         });
         return;
       }

@@ -153,8 +153,6 @@ class PerPassageiro
     catch(e)
     {
       retorno = e.toString();
-      if (retorno != null)
-        retorno = retorno?.replaceFirst('Exception', '');
       return false;
     }
   }

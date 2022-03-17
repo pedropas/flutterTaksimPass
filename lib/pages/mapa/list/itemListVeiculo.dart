@@ -11,18 +11,19 @@ class ItemVeiculo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(left: 15),
+      padding: const EdgeInsets.only(left: 15),
       color: Colors.grey.shade50,
       height: 60,
       child: Row(
         children: <Widget>[
-          Image.asset(
-            frota.veiculoImagem,
-            height: 50,
-            width: 50,
-          ),
+          frota.getImageFoto() ??
+              Image.asset(
+                'assets/images/taxi.png',
+                height: 50,
+                width: 50,
+              ),
           Container(
-            width: 200,
+            width: 180,
             padding: EdgeInsets.only(left: 15),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -30,11 +31,11 @@ class ItemVeiculo extends StatelessWidget {
               children: <Widget>[
                 Text(
                   frota.nomeFrota,
-                  style: TextStyle(fontFamily: 'Montserrat Bold'),
+                  style: const TextStyle(fontFamily: 'Montserrat Bold'),
                 ),
                 Text(
                   frota.placaModelo,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontFamily: 'Montserrat',
                     color: BUTTON_COLOR,
                   ),
@@ -55,7 +56,14 @@ class ItemVeiculo extends StatelessWidget {
                 ),
                 Text(
                   frota.tempoEstimado,
-                  style: TextStyle(
+                  style: const TextStyle(
+                    fontFamily: 'Montserrat',
+                    color: BUTTON_COLOR,
+                  ),
+                ),
+                Text(
+                  frota.percentualDesconto.toString()+" %",
+                  style: const TextStyle(
                     fontFamily: 'Montserrat',
                     color: BUTTON_COLOR,
                   ),

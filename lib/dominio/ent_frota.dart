@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:taksim/dominio/ent_passageiro.dart';
@@ -59,8 +60,8 @@ class EntFrota extends BaseModelo
 
   @override
   String toJson() {
-    // TODO: implement toJson
-    throw UnimplementedError();
+    String jsonString = json.encode(preparToJson());
+    return jsonString;
   }
 
   @override
@@ -80,19 +81,71 @@ class EntFrota extends BaseModelo
     if (jsonMap.containsKey('veiculoImagem')) veiculoImagem = jsonMap['veiculoImagem'];
   }
 
-  void fromJsonList(String arrayText)
+  factory EntFrota.fromJson(Map<String, dynamic> jsonMap)
   {
-    arrayText = '{"listOf":[$arrayText]}';
-    var tagsJson = jsonDecode(arrayText)['listOf'];
-    List<String>? tags = (tagsJson != null) ? List.from(tagsJson) : null;
-    print(tags);
+    String id = '';
+    String veiculoImagem = '';
+    String nomeFrota = ' ';
+    String placaModelo = ' ';
+    String distanciaEstimado = '0 Km';
+    String tempoEstimado = '0 min';
+    double latitude = 0;
+    double longitude = 0;
+    double percentualDesconto = 0;
+    int motoristaId = 0;
+
+    if (jsonMap.containsKey('id')) id = jsonMap['id'];
+    if (jsonMap.containsKey('motoristaId')) motoristaId = jsonMap['motoristaId'];
+    if (jsonMap.containsKey('percentualDesconto')) percentualDesconto = jsonMap['percentualDesconto'];
+    if (jsonMap.containsKey('longitude')) longitude = jsonMap['longitude'];
+    if (jsonMap.containsKey('latitude')) latitude = jsonMap['latitude'];
+    if (jsonMap.containsKey('tempoEstimado')) tempoEstimado = jsonMap['tempoEstimado'];
+    if (jsonMap.containsKey('distanciaEstimado')) distanciaEstimado = jsonMap['distanciaEstimado'];
+    if (jsonMap.containsKey('placaModelo')) placaModelo = jsonMap['placaModelo'];
+    if (jsonMap.containsKey('nomeFrota')) nomeFrota = jsonMap['nomeFrota'];
+    if (jsonMap.containsKey('veiculoImagem')) veiculoImagem = jsonMap['veiculoImagem'];
+
+    return EntFrota(nomeFrota: nomeFrota, veiculoImagem: veiculoImagem, placaModelo: placaModelo, tempoEstimado: tempoEstimado, distanciaEstimado: distanciaEstimado, longitude: longitude, latitude: latitude, percentualDesconto: percentualDesconto, motoristaId: motoristaId);
   }
 
-  List<EntFrota> getListOf()
+  Future<List<EntFrota>> getList() async
   {
     EntPassageiro passageiro = EntPassageiro();
     passageiro.getLocal();
-    perFrota.getVeiculoQuadrante(passageiro.id.toString(), passageiro.senha);
+
+    var jsonStr = {'percentualDesconto':passageiro.percentualDesconto,
+                   'latitude':passageiro.latitude,
+                   'longitude':passageiro.longitude,
+                   'formaPagamento':passageiro.preferenciaFormaPagamento,};
+
+    String jsonString = json.encode(jsonStr);
+    if (await perFrota.getVeiculoQuadrante(passageiro.id.toString(), passageiro.senha,jsonString )) {
+      if (perFrota.retorno != null && (perFrota.retorno != '[]')) {
+        jsonString = perFrota.retorno??'';
+        var decoded = json.decode(jsonString);
+
+        List<EntFrota> frotas = decoded.map<EntFrota>(
+                (map) {
+              return EntFrota.fromJson(map);
+            }
+        ).toList();
+        return frotas;
+      }
+    }
     return [];
+  }
+
+  Image? getImageFoto()
+  {
+    if (veiculoImagem == null || veiculoImagem.isEmpty)
+      return null;
+
+    Uint8List _bytesImage;
+
+    int start = veiculoImagem.indexOf(',');
+    String _imgString = veiculoImagem.substring(start+1);
+    _bytesImage = Base64Decoder().convert(_imgString);
+
+    return Image.memory(_bytesImage);
   }
 }

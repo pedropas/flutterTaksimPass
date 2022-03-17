@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,7 @@ import '../../assistants/assistantMethods.dart';
 import '../../componentes/drawer/custom_drawer.dart';
 import '../../componentes/progressDialog.dart';
 import '../../dominio/directDetails.dart';
+import '../../dominio/ent_frota.dart';
 import '../../dominio/ent_passageiro.dart';
 import 'custon_positionaed_cancel.dart';
 import 'custon_positionaed_ola.dart';
@@ -52,6 +54,53 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
 
   late EntPassageiro passageiro;
 
+  List<EntFrota> listOfVeiculo = [
+    EntFrota(
+      nomeFrota: 'Frota',
+      tempoEstimado: '10 min',
+      distanciaEstimado: '15,00',
+      placaModelo: 'ABC1A234',
+      veiculoImagem: 'assets/images/taxi.png',
+      latitude: 0,
+      longitude: 0,
+      motoristaId: 1,
+      percentualDesconto: 0,
+    ),
+    EntFrota(
+      nomeFrota: 'Frota 2',
+      tempoEstimado: '12 min',
+      distanciaEstimado: 'R 12,00',
+      placaModelo: 'ABC1B124',
+      veiculoImagem: 'assets/images/taxi.png',
+      latitude: 0,
+      longitude: 0,
+      motoristaId: 1,
+      percentualDesconto: 0,
+    ),
+    EntFrota(
+      nomeFrota: 'Frota 3',
+      tempoEstimado: '12 min',
+      distanciaEstimado: 'R 12,00',
+      placaModelo: 'ABC1B155',
+      veiculoImagem: 'assets/images/taxi.png',
+      latitude: 0,
+      longitude: 0,
+      motoristaId: 1,
+      percentualDesconto: 0,
+    ),
+    EntFrota(
+      nomeFrota: 'Frota 4',
+      tempoEstimado: '12 min',
+      distanciaEstimado: 'R 12,00',
+      placaModelo: 'ABC1B155',
+      veiculoImagem: 'assets/images/taxi.png',
+      latitude: 0,
+      longitude: 0,
+      motoristaId: 1,
+      percentualDesconto: 0,
+    ),
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -85,6 +134,17 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
     });
   }
 
+  void onSoQueroUmTaxiClicked() {
+    setState(() {
+      showBemVindoContainer = false;
+      showOlaContainer = false;
+      showCabecalhoMapa = true;
+      showRiderDetailContainer = true;
+      bottomPaddingOfMap = 500.0;
+      enderecoOrigem = 'Não informado';
+      enderecoDestino = 'Não informado';
+    });
+  }
   void displayBemVindoContainer() {
     setState(() {
       showRiderDetailContainer = false;
@@ -202,7 +262,11 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
             ),
             Container(
               child: showCabecalhoMapa
-                  ? CabecalhoMapa(origem: enderecoOrigem, destino: enderecoDestino,onRetornoClicked: voltarTela,)
+                  ? CabecalhoMapa(
+                      origem: enderecoOrigem,
+                      destino: enderecoDestino,
+                      onRetornoClicked: voltarTela,
+                    )
                   : null,
             ),
             // Pronto vamos lá
@@ -220,6 +284,9 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
                   ? CustonPositionedOla(
                       displayOlalContainer: displayRiderDetailContainer,
                       nomePassageiro: passageiro.nomeSocial,
+                      onConvenioClicked: () {},
+                      onQrCodeClicked: () {},
+                      onSoQueroUmTaxiClicked: onSoQueroUmTaxiClicked,
                     )
                   : null,
             ),
@@ -228,6 +295,7 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
               child: showRiderDetailContainer
                   ? CustonPositionedRiderDetail(
                       displayRequestRideContainer: displayRequestRideContainer,
+                      listOfVeiculo: listOfVeiculo,
                     )
                   : null,
             ),
@@ -379,8 +447,13 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
     });
   }
 
-  void voltarTela()
-  {
+  void voltarTela() {
     displayBemVindoContainer();
   }
 }
+/*
+ var decoded = json.decode(jsonString);
+ List<EntFrota> frotas = decoded['item'].map<EntFrota>(
+ (map) { return EntFrota.fromJson(map)}
+ ).toList()
+  */

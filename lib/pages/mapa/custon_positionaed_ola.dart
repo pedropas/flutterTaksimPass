@@ -9,28 +9,46 @@ import '../../componentes/divider_widget.dart';
 import '../search/searchScreen.dart';
 
 class CustonPositionedOla extends StatefulWidget {
-  const CustonPositionedOla(
-      {Key? key,
-      required this.displayOlalContainer,
-      required this.nomePassageiro})
-      : super(key: key);
+  const CustonPositionedOla({
+    Key? key,
+    required this.displayOlalContainer,
+    required this.nomePassageiro,
+    required this.onSoQueroUmTaxiClicked,
+    required this.onConvenioClicked,
+    required this.onQrCodeClicked,
+  }) : super(key: key);
 
+  final VoidCallback onSoQueroUmTaxiClicked;
   final Function displayOlalContainer;
   final String nomePassageiro;
+  final Function onConvenioClicked;
+  final Function onQrCodeClicked;
 
   @override
   _CustonPositionedOlaState createState() => _CustonPositionedOlaState(
-      displayOlalContainer: displayOlalContainer,
-      nomePassageiro: nomePassageiro);
+        displayOlalContainer: displayOlalContainer,
+        nomePassageiro: nomePassageiro,
+        onConvenioClicked: onConvenioClicked,
+        onQrCodeClicked: onQrCodeClicked,
+        onSoQueroUmTaxiClicked: onSoQueroUmTaxiClicked,
+      );
 }
 
 class _CustonPositionedOlaState extends State<CustonPositionedOla> {
   double olarContainerHeight = 350.0;
   final Function displayOlalContainer;
   final String nomePassageiro;
+  final VoidCallback onSoQueroUmTaxiClicked;
+  final Function onConvenioClicked;
+  final Function onQrCodeClicked;
 
-  _CustonPositionedOlaState(
-      {required this.displayOlalContainer, required this.nomePassageiro});
+  _CustonPositionedOlaState({
+    required this.displayOlalContainer,
+    required this.nomePassageiro,
+    required this.onSoQueroUmTaxiClicked,
+    required this.onConvenioClicked,
+    required this.onQrCodeClicked,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +61,7 @@ class _CustonPositionedOlaState extends State<CustonPositionedOla> {
         curve: Curves.bounceIn,
         child: Container(
           height: olarContainerHeight,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(18.0),
@@ -81,7 +99,7 @@ class _CustonPositionedOlaState extends State<CustonPositionedOla> {
                         radius: 30,
                         fontSize: 20,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 15,
                       ),
                       CustomButtonIcon(
@@ -101,11 +119,11 @@ class _CustonPositionedOlaState extends State<CustonPositionedOla> {
                     ],
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10.0,
                 ),
                 CustomButtonIcon(
-                  onTap: () {},
+                  onTap: onSoQueroUmTaxiClicked,
                   label: 'Só quero um taxi',
                   prefix: false,
                   suffix: true,
@@ -118,7 +136,7 @@ class _CustonPositionedOlaState extends State<CustonPositionedOla> {
                   radius: 30,
                   fontSize: 20,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 16.0,
                 ),
                 SizedBox(
@@ -131,7 +149,7 @@ class _CustonPositionedOlaState extends State<CustonPositionedOla> {
                     ),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10.0,
                 ),
                 GestureDetector(
@@ -148,7 +166,7 @@ class _CustonPositionedOlaState extends State<CustonPositionedOla> {
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(5.0),
-                      boxShadow: [
+                      boxShadow: const [
                         BoxShadow(
                           color: Colors.black54,
                           blurRadius: 6.0,
@@ -160,7 +178,7 @@ class _CustonPositionedOlaState extends State<CustonPositionedOla> {
                     child: Padding(
                       padding: const EdgeInsets.all(5.0),
                       child: Row(
-                        children: [
+                        children: const [
                           Icon(
                             Icons.search,
                             color: Colors.black,
@@ -172,16 +190,16 @@ class _CustonPositionedOlaState extends State<CustonPositionedOla> {
                     ),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 24.0,
                 ),
                 Row(
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.home,
                       color: Colors.grey,
                     ),
-                    SizedBox(width: 12.0),
+                    const SizedBox(width: 12.0),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -194,15 +212,15 @@ class _CustonPositionedOlaState extends State<CustonPositionedOla> {
                                       .pickUpLocation
                                       .placeName
                                   : 'Seu Endereço',
-                              style: TextStyle(
+                              style: const TextStyle(
                                   color: Colors.black, fontSize: 12.0),
                             ),
                           ],
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 4.0,
                         ),
-                        Text(
+                        const Text(
                           "Seu Endereço",
                           style: TextStyle(color: Colors.blue, fontSize: 12.0),
                         ),
@@ -210,23 +228,23 @@ class _CustonPositionedOlaState extends State<CustonPositionedOla> {
                     )
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10.0,
                 ),
                 DividerWidget(corLinha: Colors.grey),
-                SizedBox(
+                const SizedBox(
                   height: 16.0,
                 ),
                 Row(
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.work,
                       color: Colors.grey,
                     ),
                     SizedBox(width: 12.0),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+                      children: const [
                         Text("Serviço:"),
                         SizedBox(
                           height: 4.0,

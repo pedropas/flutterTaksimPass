@@ -3,31 +3,27 @@ import 'package:get_it/get_it.dart';
 import 'package:http_pac/http_pac.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:taksim/dominio/EntDataModel1.dart';
 
 import '../helpers/config_screen.dart';
 
-class PerFrota
-{
+class PerFrota {
   HttpPAC mHttp = GetIt.I<HttpPAC>();
 
   String? retorno;
+
   String getRetorno() => retorno ?? '';
 
-  Future<bool> getVeiculoQuadrante(String idStr, String senha) async
-  {
+  Future<bool> getVeiculoQuadrante(String idStr, String senha, String dados) async {
     try {
       retorno = await mHttp.sendCripto(
-          endPoint: '/passageiro/CEL_FLU_GET_VEICULO_QUADRANTE',
+          endPoint: '/data/CEL_FLU_GET_VEICULO_QUADRANTE',
           chave: senha,
           userId: idStr,
-          dados: 'GET_VEICULO_QUADRANTE');
+          dados: dados);
       return true;
-    }
-    catch(e)
-    {
+    } catch (e) {
       retorno = e.toString();
-      if (retorno != null)
-        retorno = retorno?.replaceFirst('Exception', '');
       return false;
     }
   }

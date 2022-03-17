@@ -22,7 +22,12 @@ class EntPassageiro extends BaseModelo
    bool manterConectado = false;
    bool emailValidado = false;
    bool isLogado = false;
+   double latitude = 0.0;
+   double longitude = 0.0;
+   double percentualDesconto = 0.0;
+   String preferenciaFormaPagamento = '';
 
+   late EntPassageiro pasLido;
    PerPassageiro perPassageiro = PerPassageiro();
 
    @override
@@ -46,6 +51,10 @@ class EntPassageiro extends BaseModelo
       'foto':foto,
       'manterConectado':manterConectado,
       'emailValidado':emailValidado,
+      'latitude':latitude,
+      'longitude':longitude,
+      'percentualDesconto':percentualDesconto,
+      'preferenciaFormaPagamento':preferenciaFormaPagamento,
       };
    }
 
@@ -68,11 +77,15 @@ class EntPassageiro extends BaseModelo
       if (jsonMap.containsKey('foto')) foto = jsonMap['foto'];
       if (jsonMap.containsKey('manterConectado')) manterConectado = jsonMap['manterConectado'];
       if (jsonMap.containsKey('emailValidado')) emailValidado = jsonMap['emailValidado'];
+      if (jsonMap.containsKey('latitude')) latitude = jsonMap['latitude'];
+      if (jsonMap.containsKey('longitude')) longitude = jsonMap['longitude'];
+      if (jsonMap.containsKey('percentualDesconto')) percentualDesconto = jsonMap['percentualDesconto'];
+      if (jsonMap.containsKey('preferenciaFormaPagamento')) preferenciaFormaPagamento = jsonMap['preferenciaFormaPagamento'];
    }
 
    String compare(EntPassageiro lido)
    {
-     if (id != lido.id)
+     if ((id != lido.id) && (id != 0))
      {
         return 'Este dados não são os mesmo gravados neste celular desaja substitui-los';
      }
@@ -92,6 +105,8 @@ class EntPassageiro extends BaseModelo
      manterConectado = lido.manterConectado;
      email = lido.email;
      emailValidado = lido.emailValidado;
+     preferenciaFormaPagamento = lido.preferenciaFormaPagamento;
+     percentualDesconto = lido.percentualDesconto;
      setLocal();
    }
 
@@ -154,8 +169,8 @@ class EntPassageiro extends BaseModelo
    {
      bool resp = await perPassageiro.validaLogin(email, senha);
      String retorno = getRetorno();
-     if (!retorno.contains('LOGIN')) {
-       EntPassageiro pasLido = EntPassageiro();
+     if (resp) {
+       pasLido = EntPassageiro();
        pasLido.fromJson(retorno);
        if (compare(pasLido) != 'PASSAGEIRO_OK')
        {
@@ -180,5 +195,10 @@ class EntPassageiro extends BaseModelo
 
       return Image.memory(_bytesImage);
    }
+
+  void atualizaPassageiroRemoto() {
+     if (pasLido != 0)
+        atualiza(pasLido);
+  }
 
 }
