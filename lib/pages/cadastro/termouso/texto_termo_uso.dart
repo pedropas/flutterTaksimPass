@@ -49,7 +49,8 @@ class _TextoTermoUsoState extends State<TextoTermoUso> {
                 titulo: "Termo de uso",
                 subTitulo:
                     "Leia com atenção todo o termo e clique em aceitar para continuar.",
-                retornoClicked: onButtonBackClick),
+                retornoClicked: onButtonBackClick,
+            mostrarBotaoRetorno: true,),
             SizedBox(height: 5,),
             Expanded(
               child: SingleChildScrollView(

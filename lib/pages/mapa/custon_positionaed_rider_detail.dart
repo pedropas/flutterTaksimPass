@@ -19,17 +19,21 @@ class CustonPositionedRiderDetail extends StatefulWidget {
   const CustonPositionedRiderDetail(
       {Key? key,
       required this.displayRequestRideContainer,
-      required this.listOfVeiculo})
+      required this.listOfVeiculo,
+      required this.onFormaPagamentoClicked})
       : super(key: key);
 
   final Function displayRequestRideContainer;
   final List<EntFrota> listOfVeiculo;
+  final VoidCallback onFormaPagamentoClicked;
 
   @override
   _CustonPositionedRiderDetailState createState() =>
       _CustonPositionedRiderDetailState(
-          displayRequestRideContainer: displayRequestRideContainer,
-          listOfVeiculo: listOfVeiculo);
+        displayRequestRideContainer: displayRequestRideContainer,
+        listOfVeiculo: listOfVeiculo,
+        onFormaPagamentoClicked: onFormaPagamentoClicked,
+      );
 }
 
 class _CustonPositionedRiderDetailState
@@ -38,11 +42,20 @@ class _CustonPositionedRiderDetailState
   late Function displayRequestRideContainer;
   DirectionDetails tripDirectionDetails = DirectionDetails();
   final List<EntFrota> listOfVeiculo;
+  final VoidCallback onFormaPagamentoClicked;
 
-  _CustonPositionedRiderDetailState(
-      {required this.displayRequestRideContainer, required this.listOfVeiculo});
+  _CustonPositionedRiderDetailState({
+    required this.displayRequestRideContainer,
+    required this.listOfVeiculo,
+    required this.onFormaPagamentoClicked,
+  });
 
-  final _frotaBloc = FrotaBloc();
+  late FrotaBloc _frotaBloc;
+
+  @override
+  void initState() {
+    _frotaBloc = FrotaBloc(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -209,21 +222,20 @@ class _CustonPositionedRiderDetailState
                   Container(
                     padding: EdgeInsets.only(right: 15),
                     child: StreamBuilder<IconData>(
-                      stream: _frotaBloc.outIconFormaPagamento,
-                      builder: (context, snapshot) {
-                        return Icon(snapshot.data,
-                          size: 35,
-                          color: BUTTON_COLOR,
-                        );
-                      }
-                    ),
+                        stream: _frotaBloc.outIconFormaPagamento,
+                        builder: (context, snapshot) {
+                          return Icon(
+                            snapshot.data,
+                            size: 35,
+                            color: BUTTON_COLOR,
+                          );
+                        }),
                   ),
                   StreamBuilder<String>(
-                    stream: _frotaBloc.outFormaPagamento,
-                    builder: (context, snapshot) {
-                      return SizedBox(
-                        width: 100,
-                        child: Expanded(
+                      stream: _frotaBloc.outFormaPagamento,
+                      builder: (context, snapshot) {
+                        return SizedBox(
+                          width: 100,
                           child: Text(
                             snapshot.data ?? 'Dinheiro',
                             style: const TextStyle(
@@ -231,157 +243,30 @@ class _CustonPositionedRiderDetailState
                                 fontSize: 15,
                                 fontFamily: "Montserrat Bold"),
                           ),
-                        ),
-                      );
-                    }
-                  ),
+                        );
+                      }),
                   // texto forma pagamento
                   const SizedBox(
                     width: 5,
                   ),
                   // icone
                   CustomIconButton(
-                      radius: 5,
-                      iconData: FontAwesomeIcons.arrowAltCircleRight,
-                      onTap: () {}),
+                    radius: 5,
+                    iconData: FontAwesomeIcons.arrowAltCircleRight,
+                    onTap: onFormaPagamentoClicked,
+                  ),
                 ],
               ),
-              // CustomComboBox(
-              //   label: '',
-              //   selectedValue: (_) {},
-              //   listColor: Colors.deepPurple.shade50,
-              //   listItens: ['Dinheiro', 'Cartão Crédito', 'Cartão Débito'],
-              //   hintText: 'Teste',
-              //   valorEscolhido: 'Dinheiro',
-              // ),
             ],
           ),
-          // child: Column(
-          //   children: [
-          //     Container(
-          //       width: double.infinity,
-          //       color: Colors.white,
-          //       child: Padding(
-          //         padding: EdgeInsets.symmetric(
-          //           horizontal: 16.0,
-          //         ),
-          //         child: Row(
-          //           children: [
-          //             Image.asset(
-          //               "assets/images/taxi.png",
-          //               height: 70.0,
-          //               width: 80,
-          //             ),
-          //             SizedBox(
-          //               width: 16.0,
-          //             ),
-          //             Padding(
-          //               padding: const EdgeInsets.symmetric(
-          //                 vertical: 17.0,
-          //               ),
-          //               child: Column(
-          //                 crossAxisAlignment: CrossAxisAlignment.start,
-          //                 children: [
-          //                   Text(
-          //                     "Carro:",
-          //                     style: TextStyle(
-          //                       fontSize: 18.0,
-          //                       fontFamily: "Brand Bold",
-          //                     ),
-          //                   ),
-          //                   Text(
-          //                     (tripDirectionDetails != null)
-          //                         ? tripDirectionDetails.distanceText
-          //                         : '',
-          //                     style: TextStyle(
-          //                       fontSize: 18.0,
-          //                       color: Colors.white,
-          //                     ),
-          //                   ),
-          //                 ],
-          //               ),
-          //             ),
-          //             Expanded(
-          //               child: Container(),
-          //             ),
-          //             Text(
-          //               (tripDirectionDetails != null)
-          //                   ? 'R\$ ${AssistantMethods.calculateFares(tripDirectionDetails)}'
-          //                   : '',
-          //               style: TextStyle(
-          //                 fontSize: 18.0,
-          //                 color: Colors.white,
-          //               ),
-          //             ),
-          //           ],
-          //         ),
-          //       ),
-          //     ),
-          //     SizedBox(
-          //       height: 20.0,
-          //     ),
-          //     Padding(
-          //       padding: EdgeInsets.symmetric(
-          //         horizontal: 20.0,
-          //       ),
-          //       child: Row(
-          //         children: [
-          //           Icon(
-          //             FontAwesomeIcons.moneyCheckAlt,
-          //             size: 18,
-          //             color: Colors.black54,
-          //           ),
-          //           SizedBox(
-          //             width: 16.0,
-          //           ),
-          //           Text('Dinheiro'),
-          //           SizedBox(
-          //             width: 6.0,
-          //           ),
-          //           Icon(
-          //             Icons.keyboard_arrow_down,
-          //             color: Colors.black54,
-          //             size: 16.0,
-          //           ),
-          //         ],
-          //       ),
-          //     ),
-          //     SizedBox(height: 20.0),
-          //     Padding(
-          //       padding: EdgeInsets.symmetric(
-          //         horizontal: 16.0,
-          //       ),
-          //       child: ElevatedButton(
-          //         onPressed: () {
-          //           displayRequestRideContainer();
-          //         },
-          //         child: Padding(
-          //           padding: EdgeInsets.all(17.0),
-          //           child: Row(
-          //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //             children: [
-          //               Text(
-          //                 "Solicitar",
-          //                 style: TextStyle(
-          //                   fontSize: 20.0,
-          //                   fontWeight: FontWeight.bold,
-          //                   color: Colors.white,
-          //                 ),
-          //               ),
-          //               Icon(
-          //                 FontAwesomeIcons.taxi,
-          //                 color: Colors.white,
-          //                 size: 16,
-          //               ),
-          //             ],
-          //           ),
-          //         ),
-          //       ),
-          //     ),
-          //   ],
-          // ),
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _frotaBloc.dispose();
+    super.dispose();
   }
 }

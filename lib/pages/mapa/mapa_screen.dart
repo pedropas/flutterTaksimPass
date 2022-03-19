@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +15,8 @@ import '../../componentes/progressDialog.dart';
 import '../../dominio/directDetails.dart';
 import '../../dominio/ent_frota.dart';
 import '../../dominio/ent_passageiro.dart';
-import 'custon_positionaed_cancel.dart';
+import 'custon_positionaed_Forma_pagamento.dart';
+import 'custon_positionaed_Forma_pagamento_opcao.dart';
 import 'custon_positionaed_ola.dart';
 import 'custon_positionaed_rider_detail.dart';
 
@@ -44,6 +44,8 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
   bool showCancelContainer = false;
   bool showBemVindoContainer = true;
   bool showCabecalhoMapa = false;
+  bool showFormaPagamento = false;
+  bool showFormaPagamentoOpcao = false;
 
   String enderecoOrigem = 'Não Informado';
   String enderecoDestino = 'Não Informado';
@@ -119,6 +121,8 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
       showCabecalhoMapa = true;
       showRiderDetailContainer = true;
       bottomPaddingOfMap = 500.0;
+      showFormaPagamento = false;
+      showFormaPagamentoOpcao = false;
     });
   }
 
@@ -143,6 +147,8 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
       bottomPaddingOfMap = 500.0;
       enderecoOrigem = 'Não informado';
       enderecoDestino = 'Não informado';
+      showFormaPagamento = false;
+      showFormaPagamentoOpcao = false;
     });
   }
   void displayBemVindoContainer() {
@@ -151,6 +157,33 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
       showBemVindoContainer = false;
       showOlaContainer = true;
       showCabecalhoMapa = false;
+      showFormaPagamento = false;
+      showFormaPagamentoOpcao = false;
+      bottomPaddingOfMap = 500.0;
+    });
+  }
+
+  void displayFormaPagamentoContainer() {
+    setState(() {
+      showRiderDetailContainer = false;
+      showBemVindoContainer = false;
+      showOlaContainer = false;
+      showCabecalhoMapa = false;
+      showFormaPagamento = true;
+      showFormaPagamentoOpcao = false;
+      bottomPaddingOfMap = 500.0;
+    });
+  }
+
+  void displayFormaPagamentoOpcoes() {
+    setState(() {
+      showRiderDetailContainer = false;
+      showBemVindoContainer = false;
+      showOlaContainer = false;
+      showCabecalhoMapa = false;
+      showFormaPagamento = false;
+      showFormaPagamentoOpcao = true;
+      bottomPaddingOfMap = 500.0;
     });
   }
 
@@ -296,18 +329,28 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
                   ? CustonPositionedRiderDetail(
                       displayRequestRideContainer: displayRequestRideContainer,
                       listOfVeiculo: listOfVeiculo,
+                      onFormaPagamentoClicked: displayFormaPagamentoContainer,
                     )
                   : null,
             ),
-            // // cancel wait
-            // Container(
-            //   child: false
-            //       ? CustonPositionCancelRequest(
-            //           seacherContainerHeight: 270.0,
-            //           displayRiderDetailContainer: displayRiderDetailContainer,
-            //         )
-            //       : null,
-            // ),
+            Container(
+              child: showFormaPagamento
+                  ? CustonPositionEscolherFormaPagamento(
+                onEscolherFormaPagamentoClicked: displayFormaPagamentoOpcoes,
+                onCancelarFormaPagamentoClicked: displayRiderDetailContainer,
+              )
+                  : null,
+            ),
+            Container(
+              child: showFormaPagamentoOpcao
+                  ? CustonPositionEscolherFormaPagamentOpcao(
+                onEscolherFormaPagamentOpcaoClicked: (resp) {
+                  print(resp);
+                },
+                onCancelarFormaPagamentoOpcaoClicked: displayRiderDetailContainer,
+              )
+                  : null,
+            ),
           ],
         ),
       ),

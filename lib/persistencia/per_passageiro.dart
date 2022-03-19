@@ -84,6 +84,26 @@ class PerPassageiro
   void setRemoto()
   {}
 
+  Future<bool> setFormaPagamento(String idStr, String senha, String dado) async
+  {
+    try {
+      retorno = await mHttp.sendCripto(
+          endPoint: '/passageiro/CEL_FLU_FORMA_PAGAMENTO',
+          chave: senha,
+          userId: idStr,
+          dados: dado);
+      return true;
+    }
+    catch(e)
+    {
+      retorno = e.toString();
+      if (retorno != null)
+        retorno = retorno?.replaceFirst('Exception', '');
+      return false;
+    }
+  }
+
+
   Future<bool> enviaDocumento(String idStr, String dado) async
   {
     try {

@@ -24,7 +24,6 @@ class CustonPositionBemVindo extends StatefulWidget {
 }
 
 class _CustonPositionBemVindoState extends State<CustonPositionBemVindo> {
-
   double bemVindoContainerHeight = 0;
   VoidCallback displayBemVindoContainer;
 
@@ -64,11 +63,13 @@ class _CustonPositionBemVindoState extends State<CustonPositionBemVindo> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 CabecalhoCadastro(
-                    mostraProgressao: false,
-                    subTitulo: 'E qual é o destino à seguir agora?',
-                    titulo: 'Pronto vamos lá',
-                    indiceProgressao: 1,
-                    retornoClicked: () {}),
+                  mostraProgressao: false,
+                  subTitulo: 'E qual é o destino à seguir agora?',
+                  titulo: 'Pronto vamos lá',
+                  indiceProgressao: 1,
+                  retornoClicked: () {},
+                  mostrarBotaoRetorno: false,
+                ),
                 SizedBox(
                   height: 5.0,
                 ),
@@ -87,11 +88,10 @@ class _CustonPositionBemVindoState extends State<CustonPositionBemVindo> {
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.95,
                   height: 50,
-                  child:
-                      ElevatedButton(
-                          onPressed: displayBemVindoContainer,
-                          child: Text("COMEÇAR")),
-                  ),
+                  child: ElevatedButton(
+                      onPressed: displayBemVindoContainer,
+                      child: Text("COMEÇAR")),
+                ),
               ],
             ),
           ),

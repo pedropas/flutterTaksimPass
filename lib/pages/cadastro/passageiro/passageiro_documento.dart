@@ -62,7 +62,8 @@ class _PassageiroCadastroDocumento extends State<PassageiroCadastroDocumento> {
                   mostraProgressao: true,
                   titulo: "Dados pessoais",
                   subTitulo: "Insira seus dados do contrato",
-                  retornoClicked: onButtonBackClick),
+                  retornoClicked: onButtonBackClick,
+              mostrarBotaoRetorno: true,),
               SizedBox(
                 height: 150,
               ),

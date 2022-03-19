@@ -59,7 +59,8 @@ class _PassageiroCadastroParte2 extends State<PassageiroCadastroParte2> {
                   mostraProgressao: true,
                   titulo: "Quem é você?",
                   subTitulo: "Preencha abaixo com seus dados",
-                  retornoClicked: onButtonBackClick),
+                  retornoClicked: onButtonBackClick,
+              mostrarBotaoRetorno: true,),
               SizedBox(
                 height: 150,
               ),

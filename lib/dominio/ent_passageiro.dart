@@ -201,4 +201,9 @@ class EntPassageiro extends BaseModelo
         atualiza(pasLido);
   }
 
+   Future<bool> setFormaPagamento() async
+   {
+     String dados = preferenciaFormaPagamento;
+     return await perPassageiro.setFormaPagamento(id.toString(),senha, dados);
+   }
 }

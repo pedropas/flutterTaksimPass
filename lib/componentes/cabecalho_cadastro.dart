@@ -9,6 +9,7 @@ class CabecalhoCadastro extends StatelessWidget {
   String subTitulo;
   int indiceProgressao;
   VoidCallback retornoClicked;
+  bool mostrarBotaoRetorno;
 
   CabecalhoCadastro({
     required this.mostraProgressao,
@@ -16,6 +17,7 @@ class CabecalhoCadastro extends StatelessWidget {
     required this.titulo,
     required this.indiceProgressao,
     required this.retornoClicked,
+    required this.mostrarBotaoRetorno,
   });
 
   @override
@@ -31,7 +33,7 @@ class CabecalhoCadastro extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Container(
-                child: mostraProgressao
+                child: mostrarBotaoRetorno
                     ? OutlinedButton(
                         onPressed: retornoClicked,
                         child: Icon(

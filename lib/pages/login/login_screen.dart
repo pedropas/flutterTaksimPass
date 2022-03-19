@@ -103,7 +103,8 @@ class _LoginScreen extends State<LoginScreen> {
                       mostraProgressao: false,
                       titulo: "Login",
                       subTitulo: "Acesse sua conta com os dados já cadastrados",
-                      retornoClicked: (){}),
+                      retornoClicked: (){},
+                  mostrarBotaoRetorno: false,),
                   const SizedBox(
                     height: 280,
                   ),

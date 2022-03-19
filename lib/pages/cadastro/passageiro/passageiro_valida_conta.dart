@@ -70,7 +70,8 @@ class _PassageiroValidaConta extends State<PassageiroValidaConta> {
                     mostraProgressao: true,
                     titulo: "Código de verificação?",
                     subTitulo: "Informe o código recebido no seu E-mail " + validaContaStore.emailTemp,
-                    retornoClicked: onButtonBackClick),
+                    retornoClicked: onButtonBackClick,
+                mostrarBotaoRetorno: true,),
                 SizedBox(
                   height: 150,
                 ),

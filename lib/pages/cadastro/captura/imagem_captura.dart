@@ -86,6 +86,7 @@ class _CapturaImagemState extends State<CapturaImagem> {
                               titulo: 'Hora da selfie',
                               indiceProgressao: 6,
                               retornoClicked: onButtonBackClick,
+                              mostrarBotaoRetorno: false,
                             ),
                           ),
                           Padding(
@@ -158,6 +159,7 @@ class _CapturaImagemState extends State<CapturaImagem> {
                             titulo: 'Pronto, selfie ok',
                             indiceProgressao: 6,
                             retornoClicked: onButtonBackClick,
+                            mostrarBotaoRetorno: false,
                           ),
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 50.0),

@@ -50,7 +50,8 @@ class _TermoUsoState extends State<TermoUso> {
                 titulo: "Termo de uso",
                 subTitulo:
                     "Leia com atenção todos os termos e clique em aceitar para continuar.",
-                retornoClicked: onButtonBackClick),
+                retornoClicked: onButtonBackClick,
+            mostrarBotaoRetorno: true,),
             Column(
               //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[

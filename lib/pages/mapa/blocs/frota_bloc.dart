@@ -3,10 +3,12 @@ import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:taksim/dominio/ent_frota.dart';
 import 'package:taksim/dominio/ent_passageiro.dart';
 
+import '../../../DataHandler/appData.dart';
 import '../../../helpers/config-gerais.dart';
 
 class FrotaBloc extends BlocBase {
@@ -15,6 +17,7 @@ class FrotaBloc extends BlocBase {
   final _formaPagamentoController = BehaviorSubject<String>();
   final _iconFormaPagamentoController = BehaviorSubject<IconData>();
 
+  bool cancelaTimer = false;
   EntPassageiro passageiro = EntPassageiro();
   double percentual = 0;
 
@@ -25,38 +28,56 @@ class FrotaBloc extends BlocBase {
 
   Stream<String> get outFormaPagamento => _formaPagamentoController.stream;
 
-  Stream<IconData> get outIconFormaPagamento => _iconFormaPagamentoController.stream;
+  Stream<IconData> get outIconFormaPagamento =>
+      _iconFormaPagamentoController.stream;
 
   Stream<String> get outPercentualDescontoStr =>
       _percentualDescontoController.stream.transform(
-          StreamTransformer<double, String>.fromHandlers(
-              handleData: (perc, sink) {
-                var f = NumberFormat('0#');
-                String percentual = f.format(perc) + "%";
-                sink.add(percentual);
-              }),
+        StreamTransformer<double, String>.fromHandlers(
+            handleData: (perc, sink) {
+          var f = NumberFormat('0#');
+          String percentual = f.format(perc) + "%";
+          sink.add(percentual);
+        }),
       );
 
   Map<String, Map<String, dynamic>> _frotas = {};
 
-  FrotaBloc() {
-    _addCarroFrotaQuadrante();
+  FrotaBloc(BuildContext context) {
+    _addCarroFrotaQuadrante(context);
     passageiro.getLocal();
     _percentualDescontoController.sink.add(passageiro.percentualDesconto);
     percentual = passageiro.percentualDesconto;
     _formaPagamentoController.sink.add(passageiro.preferenciaFormaPagamento);
     _iconFormaPagamentoController.sink.add(
-        FORMA_PAGAMENTO_ICONE[passageiro.preferenciaFormaPagamento] ?? FontAwesomeIcons.moneyCheckAlt);
+        FORMA_PAGAMENTO_ICONE[passageiro.preferenciaFormaPagamento] ??
+            FontAwesomeIcons.moneyCheckAlt);
   }
 
-  void _addCarroFrotaQuadrante() async {
+  void _addCarroFrotaQuadrante(BuildContext context) async {
     Timer.periodic(Duration(seconds: 10), (Timer t) {
-      verificaAtualizacaoListaFrota();
+      verificaAtualizacaoListaFrota(context);
+      if (cancelaTimer)  t.cancel();
     });
   }
 
-  void verificaAtualizacaoListaFrota() async {
+  void verificaAtualizacaoListaFrota(BuildContext context) async {
     _frotas.clear();
+    AppData appData = Provider.of<AppData>(context, listen: false);
+    if (appData != null) {
+      if (passageiro.latitude !=
+              appData.pickUpLocation
+                  .latitude ||
+          passageiro.longitude !=
+              appData.pickUpLocation
+                  .longitude) {
+        passageiro.latitude = appData.pickUpLocation
+            .latitude;
+        passageiro.longitude = appData.pickUpLocation
+            .longitude;
+        passageiro.setLocal();
+      }
+    }
     List<EntFrota> listOfFrota = await EntFrota(
             nomeFrota: 'nomeFrota',
             veiculoImagem: 'veiculoImagem',
@@ -98,5 +119,6 @@ class FrotaBloc extends BlocBase {
     _percentualDescontoController.close();
     _iconFormaPagamentoController.close();
     _formaPagamentoController.close();
+    cancelaTimer = true;
   }
 }

@@ -132,6 +132,7 @@ flutter:
     - assets/images/maquinaMoto.png
     - assets/images/receita.png
     - assets/images/payPal.png
+    - assets/images/MetodoPagamento.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

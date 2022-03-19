@@ -56,7 +56,8 @@ class _PassageiroCadastroSenha extends State<PassageiroCadastroSenha> {
                   titulo: "Criar senha",
                   subTitulo:
                       "Legal, para criarmos uma nova senha com mais segurança, precisamos que siga as regras nas informações.",
-                  retornoClicked: onButtonBackClick),
+                  retornoClicked: onButtonBackClick,
+              mostrarBotaoRetorno: true,),
               SizedBox(
                 height: 140,
               ),

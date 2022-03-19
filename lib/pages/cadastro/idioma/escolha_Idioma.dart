@@ -41,7 +41,8 @@ class _EscolhaIdiomaState extends State<EscolhaIdioma> {
                 mostraProgressao: true,
                 titulo: "Idioma",
                 subTitulo: "Escolha o de sua preferência",
-                retornoClicked: onButtonBackClick),
+                retornoClicked: onButtonBackClick,
+            mostrarBotaoRetorno: true,),
             SizedBox(
               height: 160,
             ),
