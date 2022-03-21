@@ -8,6 +8,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 import 'package:taksim/pages/mapa/cabecalho_mapa.dart';
 import 'package:taksim/pages/mapa/custon_positionaed_bem_vindo.dart';
+import 'package:taksim/pages/mapa/custon_positionaed_list_card_modify.dart';
 import '../../DataHandler/appData.dart';
 import '../../assistants/assistantMethods.dart';
 import '../../componentes/drawer/custom_drawer.dart';
@@ -46,6 +47,7 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
   bool showCabecalhoMapa = false;
   bool showFormaPagamento = false;
   bool showFormaPagamentoOpcao = false;
+  bool showCartaoOrModify = false;
 
   String enderecoOrigem = 'Não Informado';
   String enderecoDestino = 'Não Informado';
@@ -123,6 +125,7 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
       bottomPaddingOfMap = 500.0;
       showFormaPagamento = false;
       showFormaPagamentoOpcao = false;
+      showCartaoOrModify = false;
     });
   }
 
@@ -149,6 +152,7 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
       enderecoDestino = 'Não informado';
       showFormaPagamento = false;
       showFormaPagamentoOpcao = false;
+      showCartaoOrModify = false;
     });
   }
   void displayBemVindoContainer() {
@@ -160,6 +164,7 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
       showFormaPagamento = false;
       showFormaPagamentoOpcao = false;
       bottomPaddingOfMap = 500.0;
+      showCartaoOrModify = false;
     });
   }
 
@@ -172,6 +177,7 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
       showFormaPagamento = true;
       showFormaPagamentoOpcao = false;
       bottomPaddingOfMap = 500.0;
+      showCartaoOrModify = false;
     });
   }
 
@@ -184,8 +190,22 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
       showFormaPagamento = false;
       showFormaPagamentoOpcao = true;
       bottomPaddingOfMap = 500.0;
+      showCartaoOrModify = false;
     });
   }
+
+  void displayCardModify()  {
+  setState(() {
+  showRiderDetailContainer = false;
+  showBemVindoContainer = false;
+  showOlaContainer = false;
+  showCabecalhoMapa = false;
+  showFormaPagamento = false;
+  showFormaPagamentoOpcao = false;
+  showCartaoOrModify = true;
+  bottomPaddingOfMap = 500.0;
+  });
+}
 
   String state = "normal";
 
@@ -347,7 +367,17 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
                 onEscolherFormaPagamentOpcaoClicked: (resp) {
                   print(resp);
                 },
-                onCancelarFormaPagamentoOpcaoClicked: displayRiderDetailContainer,
+                onCancelarFormaPagamentoOpcaoClicked: displayRiderDetailContainer, onAddCardOrModify:displayCardModify ,
+              )
+                  : null,
+            ),
+            Container(
+              child: showCartaoOrModify
+                  ? CustonPositionEscolherListaCartaoModifica(
+                onEscolherFormaPagamentOpcaoClicked: (resp) {
+                  print(resp);
+                },
+                onCancelarFormaPagamentoOpcaoClicked: displayRiderDetailContainer, onAddCardOrModify:displayCardModify ,
               )
                   : null,
             ),

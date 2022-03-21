@@ -6,7 +6,7 @@ import '../../../helpers/config-gerais.dart';
 
 class FormaPagamentoBloc extends BlocBase {
   final _formaPagamentoController = BehaviorSubject<int>();
-  late EntPassageiro passageiro = EntPassageiro();
+  EntPassageiro passageiro = EntPassageiro();
 
   Stream<int> get formaPagamentoPreferencial => _formaPagamentoController.stream;
 

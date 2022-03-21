@@ -133,6 +133,10 @@ flutter:
     - assets/images/receita.png
     - assets/images/payPal.png
     - assets/images/MetodoPagamento.png
+    - assets/images/mastercard.png
+    - assets/images/visacard.png
+    - assets/images/elocard.png
+    - assets/images/outrocard.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
