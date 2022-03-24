@@ -7,15 +7,16 @@ import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:taksim/dominio/ent_frota.dart';
 import 'package:taksim/dominio/ent_passageiro.dart';
-
 import '../../../DataHandler/appData.dart';
 import '../../../helpers/config-gerais.dart';
+import '../../../helpers/enums_controler.dart';
 
 class FrotaBloc extends BlocBase {
   final _frotaController = BehaviorSubject<List>();
   final _percentualDescontoController = BehaviorSubject<double>();
   final _formaPagamentoController = BehaviorSubject<String>();
   final _iconFormaPagamentoController = BehaviorSubject<IconData>();
+  final _StatusAppScreenController = BehaviorSubject<stateScreenEnum>();
 
   bool cancelaTimer = false;
   EntPassageiro passageiro = EntPassageiro();
@@ -57,7 +58,8 @@ class FrotaBloc extends BlocBase {
   void _addCarroFrotaQuadrante(BuildContext context) async {
     Timer.periodic(Duration(seconds: 10), (Timer t) {
       verificaAtualizacaoListaFrota(context);
-      if (cancelaTimer)  t.cancel();
+      if (cancelaTimer)
+        t.cancel();
     });
   }
 

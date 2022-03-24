@@ -20,26 +20,15 @@ class CartoesPassageiroBloc extends BlocBase {
     List<EntCartaoPassageiro> listOf = [
       EntCartaoPassageiro(
         passageiroId: 1,
-        quatroUltimosCartao: 1230,
+        quatroUltimosCartao: '1230',
         brand: 'VISA',
         adquirenteId: 1,
         status: true,
+        validade: '00/00',
+        origem: '0000',
+        token: '0000',
       ),
-      EntCartaoPassageiro(
-        passageiroId: 1,
-        quatroUltimosCartao: 1234,
-        brand: 'MASTER',
-        adquirenteId: 1,
-        status: false,
-      ),
-      EntCartaoPassageiro(
-        passageiroId: 1,
-        quatroUltimosCartao: 1235,
-        brand: 'ELO',
-        adquirenteId: 1,
-        status: false,
-      ),
-    ];
+       ];
     _CartoesPassageiroController.add(listOf);
   }
 

@@ -129,8 +129,10 @@ class EntPassageiro extends BaseModelo
    }
 
    @override
-   void setRemoto()
-   {}
+   Future<bool> setRemoto() async
+   {
+     return false;
+   }
 
   Future<bool> exiteEmail() async
   {

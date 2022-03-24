@@ -14,10 +14,11 @@ import '../../assistants/assistantMethods.dart';
 import '../../componentes/drawer/custom_drawer.dart';
 import '../../componentes/progressDialog.dart';
 import '../../dominio/directDetails.dart';
-import '../../dominio/ent_frota.dart';
 import '../../dominio/ent_passageiro.dart';
 import 'custon_positionaed_Forma_pagamento.dart';
 import 'custon_positionaed_Forma_pagamento_opcao.dart';
+import 'custon_positionaed_adicionar_cartao.dart';
+import 'custon_positionaed_esperando_confirmacao_motorista.dart';
 import 'custon_positionaed_ola.dart';
 import 'custon_positionaed_rider_detail.dart';
 
@@ -48,62 +49,19 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
   bool showFormaPagamento = false;
   bool showFormaPagamentoOpcao = false;
   bool showCartaoOrModify = false;
+  bool showAdicionarCartao = false;
+  bool showEsperaMotoristaConfirmacao = false;
 
   String enderecoOrigem = 'Não Informado';
   String enderecoDestino = 'Não Informado';
+  int motoristaId = 0;
 
   late Position currentPosition;
   var geoLocator = Geolocator();
-  double bottomPaddingOfMap = 300.0;
+  double bottomPaddingOfMap = 350.0;
 
   late EntPassageiro passageiro;
-
-  List<EntFrota> listOfVeiculo = [
-    EntFrota(
-      nomeFrota: 'Frota',
-      tempoEstimado: '10 min',
-      distanciaEstimado: '15,00',
-      placaModelo: 'ABC1A234',
-      veiculoImagem: 'assets/images/taxi.png',
-      latitude: 0,
-      longitude: 0,
-      motoristaId: 1,
-      percentualDesconto: 0,
-    ),
-    EntFrota(
-      nomeFrota: 'Frota 2',
-      tempoEstimado: '12 min',
-      distanciaEstimado: 'R 12,00',
-      placaModelo: 'ABC1B124',
-      veiculoImagem: 'assets/images/taxi.png',
-      latitude: 0,
-      longitude: 0,
-      motoristaId: 1,
-      percentualDesconto: 0,
-    ),
-    EntFrota(
-      nomeFrota: 'Frota 3',
-      tempoEstimado: '12 min',
-      distanciaEstimado: 'R 12,00',
-      placaModelo: 'ABC1B155',
-      veiculoImagem: 'assets/images/taxi.png',
-      latitude: 0,
-      longitude: 0,
-      motoristaId: 1,
-      percentualDesconto: 0,
-    ),
-    EntFrota(
-      nomeFrota: 'Frota 4',
-      tempoEstimado: '12 min',
-      distanciaEstimado: 'R 12,00',
-      placaModelo: 'ABC1B155',
-      veiculoImagem: 'assets/images/taxi.png',
-      latitude: 0,
-      longitude: 0,
-      motoristaId: 1,
-      percentualDesconto: 0,
-    ),
-  ];
+  String state = "normal";
 
   @override
   void initState() {
@@ -115,17 +73,26 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
     AssistantMethods.getCurrentOnlineUserInfo();
   }
 
+  void fechaTudo() {
+    showRiderDetailContainer = false;
+    showOlaContainer = false;
+    showCancelContainer = false;
+    showBemVindoContainer = false;
+    showCabecalhoMapa = false;
+    showFormaPagamento = false;
+    showFormaPagamentoOpcao = false;
+    showCartaoOrModify = false;
+    showAdicionarCartao = false;
+    showEsperaMotoristaConfirmacao = false;
+  }
+
   void displayRiderDetailContainer() async {
     await getPlaceDirection();
     setState(() {
-      showBemVindoContainer = false;
-      showOlaContainer = false;
+      fechaTudo();
       showCabecalhoMapa = true;
       showRiderDetailContainer = true;
-      bottomPaddingOfMap = 500.0;
-      showFormaPagamento = false;
-      showFormaPagamentoOpcao = false;
-      showCartaoOrModify = false;
+      bottomPaddingOfMap = 400.0;
     });
   }
 
@@ -135,79 +102,57 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
     });
   }
 
-  void displayDriverDetailsContainer() {
+  void onSoQueroUmTaxiClicked() {
     setState(() {
-      bottomPaddingOfMap = 295.0;
+      fechaTudo();
+      showCabecalhoMapa = true;
+      showRiderDetailContainer = true;
+      bottomPaddingOfMap = 390.0;
+      enderecoOrigem = 'Não informado';
+      enderecoDestino = 'Não informado';
     });
   }
 
-  void onSoQueroUmTaxiClicked() {
-    setState(() {
-      showBemVindoContainer = false;
-      showOlaContainer = false;
-      showCabecalhoMapa = true;
-      showRiderDetailContainer = true;
-      bottomPaddingOfMap = 500.0;
-      enderecoOrigem = 'Não informado';
-      enderecoDestino = 'Não informado';
-      showFormaPagamento = false;
-      showFormaPagamentoOpcao = false;
-      showCartaoOrModify = false;
-    });
-  }
   void displayBemVindoContainer() {
     setState(() {
-      showRiderDetailContainer = false;
-      showBemVindoContainer = false;
+      fechaTudo();
       showOlaContainer = true;
-      showCabecalhoMapa = false;
-      showFormaPagamento = false;
-      showFormaPagamentoOpcao = false;
-      bottomPaddingOfMap = 500.0;
-      showCartaoOrModify = false;
+      bottomPaddingOfMap = 360.0;
     });
   }
 
   void displayFormaPagamentoContainer() {
     setState(() {
-      showRiderDetailContainer = false;
-      showBemVindoContainer = false;
-      showOlaContainer = false;
-      showCabecalhoMapa = false;
+      fechaTudo();
       showFormaPagamento = true;
-      showFormaPagamentoOpcao = false;
-      bottomPaddingOfMap = 500.0;
-      showCartaoOrModify = false;
+      bottomPaddingOfMap = 390.0;
     });
   }
 
   void displayFormaPagamentoOpcoes() {
     setState(() {
-      showRiderDetailContainer = false;
-      showBemVindoContainer = false;
-      showOlaContainer = false;
-      showCabecalhoMapa = false;
-      showFormaPagamento = false;
+      fechaTudo();
       showFormaPagamentoOpcao = true;
       bottomPaddingOfMap = 500.0;
-      showCartaoOrModify = false;
     });
   }
 
-  void displayCardModify()  {
-  setState(() {
-  showRiderDetailContainer = false;
-  showBemVindoContainer = false;
-  showOlaContainer = false;
-  showCabecalhoMapa = false;
-  showFormaPagamento = false;
-  showFormaPagamentoOpcao = false;
-  showCartaoOrModify = true;
-  bottomPaddingOfMap = 500.0;
-  });
-}
+  void displayCardModify() {
+    setState(() {
+      fechaTudo();
+      showCartaoOrModify = true;
+      bottomPaddingOfMap = 500.0;
+    });
+  }
 
-  String state = "normal";
+  void displayCardAdicionar() {
+    setState(() {
+      fechaTudo();
+      showCartaoOrModify = true;
+      bottomPaddingOfMap = 500.0;
+      showAdicionarCartao = true;
+    });
+  }
 
   void cancelRideRequest() {
     setState(() {
@@ -271,6 +216,20 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
         await AssistantMethods.searchCoordinateAddress(position, context);
   }
 
+  void onVeiculoEscolhidoClicked(int motoristaId)
+  {
+    getEnderecoPartida();
+    setState(() {
+      fechaTudo();
+      showCabecalhoMapa = true;
+      showEsperaMotoristaConfirmacao = true;
+      this.motoristaId = motoristaId;
+      bottomPaddingOfMap = 370.0;
+      //enderecoOrigem = initialPos.placeName;
+      print(motoristaId);
+    });
+  }
+
   static final CameraPosition _kGooglePlex = CameraPosition(
       target: LatLng(-19.975854113974894, -43.935645187060565), zoom: 14.4746);
 
@@ -308,11 +267,12 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
                 _controllerGoogleMap.complete(controller);
                 newGoogleMapController = controller;
                 setState(() {
-                  bottomPaddingOfMap = 345.0;
+                  bottomPaddingOfMap = 350.0;
                 });
                 locatePosition();
               },
             ),
+            // Cabeçalho do mapa
             Container(
               child: showCabecalhoMapa
                   ? CabecalhoMapa(
@@ -343,41 +303,65 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
                     )
                   : null,
             ),
-            //rider detail
+            //rider detail lista de veiculo
             Container(
               child: showRiderDetailContainer
                   ? CustonPositionedRiderDetail(
                       displayRequestRideContainer: displayRequestRideContainer,
-                      listOfVeiculo: listOfVeiculo,
                       onFormaPagamentoClicked: displayFormaPagamentoContainer,
+                      onVeiculoEscolhidoClicked: onVeiculoEscolhidoClicked,
+                    )
+                  : null,
+            ),
+            // Escolher forma de pagamento
+            Container(
+              child: showFormaPagamento
+                  ? CustonPositionEscolherFormaPagamento(
+                      onEscolherFormaPagamentoClicked:
+                          displayFormaPagamentoOpcoes,
+                      onCancelarFormaPagamentoClicked:
+                          displayRiderDetailContainer,
+                    )
+                  : null,
+            ),
+            // Escolher forma de pagamento
+            Container(
+              child: showFormaPagamentoOpcao
+                  ? CustonPositionEscolherFormaPagamentOpcao(
+                      onEscolherFormaPagamentOpcaoClicked: (resp) {
+                        print(resp);
+                      },
+                      onCancelarFormaPagamentoOpcaoClicked:
+                          displayRiderDetailContainer,
+                      onAddCardOrModify: displayCardModify,
+                    )
+                  : null,
+            ),
+            // Escolher cartao
+            Container(
+              child: showCartaoOrModify
+                  ? CustonPositionEscolherListaCartaoModifica(
+                      onCancelarFormaPagamentoOpcaoClicked:
+                          displayRiderDetailContainer,
+                      onAddCardOrModify: displayCardAdicionar,
+                    )
+                  : null,
+            ),
+            // Adicionar cartao
+            Container(
+              child: showAdicionarCartao
+                  ? CustonPositionAdicionarCartao(
+                      onCancelarFormaPagamentoOpcaoClicked:
+                          displayRiderDetailContainer,
                     )
                   : null,
             ),
             Container(
-              child: showFormaPagamento
-                  ? CustonPositionEscolherFormaPagamento(
-                onEscolherFormaPagamentoClicked: displayFormaPagamentoOpcoes,
-                onCancelarFormaPagamentoClicked: displayRiderDetailContainer,
-              )
-                  : null,
-            ),
-            Container(
-              child: showFormaPagamentoOpcao
-                  ? CustonPositionEscolherFormaPagamentOpcao(
-                onEscolherFormaPagamentOpcaoClicked: (resp) {
-                  print(resp);
-                },
-                onCancelarFormaPagamentoOpcaoClicked: displayRiderDetailContainer, onAddCardOrModify:displayCardModify ,
-              )
-                  : null,
-            ),
-            Container(
-              child: showCartaoOrModify
-                  ? CustonPositionEscolherListaCartaoModifica(
-                onEscolherFormaPagamentOpcaoClicked: (resp) {
-                  print(resp);
-                },
-                onCancelarFormaPagamentoOpcaoClicked: displayRiderDetailContainer, onAddCardOrModify:displayCardModify ,
+              child: showEsperaMotoristaConfirmacao
+                  ? CustonPositionEsperandoConfirmacao(
+                displayEsperandoConfirmacaoContainer: () {},
+                cancelaEsperandoConfirmacaoContainer: displayBemVindoContainer,
+                motoristaId: motoristaId,
               )
                   : null,
             ),
@@ -385,6 +369,13 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
         ),
       ),
     );
+  }
+
+  void getEnderecoPartida()
+  {
+    var initialPos =
+        Provider.of<AppData>(context, listen: false).pickUpLocation;
+    enderecoOrigem = initialPos.placeName;
   }
 
   Future<void> getPlaceDirection() async {

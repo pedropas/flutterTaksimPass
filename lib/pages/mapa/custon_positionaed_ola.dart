@@ -254,7 +254,7 @@ class _CustonPositionedOlaState extends State<CustonPositionedOla> {
                           style: TextStyle(color: Colors.blue, fontSize: 12.0),
                         ),
                       ],
-                    )
+                    ),
                   ],
                 )
               ],

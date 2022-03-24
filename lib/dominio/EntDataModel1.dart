@@ -110,8 +110,8 @@ class EntDataModel1 extends BaseModelo {
   }
 
   @override
-  void setRemoto() {
-    // TODO: implement setRemoto
+  Future<bool> setRemoto() async {
+    return false;
   }
 
   @override

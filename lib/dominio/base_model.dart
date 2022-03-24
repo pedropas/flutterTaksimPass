@@ -18,7 +18,7 @@ abstract class BaseModelo
   void getRemote();
   void getLocal();
   void setLocal();
-  void setRemoto();
+  Future<bool> setRemoto();
 
   static DateTime? convertToDate(String dt)
   {

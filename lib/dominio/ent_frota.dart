@@ -54,8 +54,9 @@ class EntFrota extends BaseModelo
   }
 
   @override
-  void setRemoto() {
+  Future<bool> setRemoto() async {
     // TODO: implement setRemoto
+    return false;
   }
 
   @override

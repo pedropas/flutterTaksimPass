@@ -16,23 +16,23 @@ import '../search/searchScreen.dart';
 import 'blocs/frota_bloc.dart';
 
 class CustonPositionedRiderDetail extends StatefulWidget {
-  const CustonPositionedRiderDetail(
-      {Key? key,
-      required this.displayRequestRideContainer,
-      required this.listOfVeiculo,
-      required this.onFormaPagamentoClicked})
-      : super(key: key);
+  const CustonPositionedRiderDetail({
+    Key? key,
+    required this.displayRequestRideContainer,
+    required this.onFormaPagamentoClicked,
+    required this.onVeiculoEscolhidoClicked,
+  }) : super(key: key);
 
   final Function displayRequestRideContainer;
-  final List<EntFrota> listOfVeiculo;
   final VoidCallback onFormaPagamentoClicked;
+  final Function(int) onVeiculoEscolhidoClicked;
 
   @override
   _CustonPositionedRiderDetailState createState() =>
       _CustonPositionedRiderDetailState(
         displayRequestRideContainer: displayRequestRideContainer,
-        listOfVeiculo: listOfVeiculo,
         onFormaPagamentoClicked: onFormaPagamentoClicked,
+        onVeiculoEscolhidoClicked: onVeiculoEscolhidoClicked,
       );
 }
 
@@ -41,13 +41,13 @@ class _CustonPositionedRiderDetailState
   double riderDetailContainerHeight = 390;
   late Function displayRequestRideContainer;
   DirectionDetails tripDirectionDetails = DirectionDetails();
-  final List<EntFrota> listOfVeiculo;
   final VoidCallback onFormaPagamentoClicked;
+  final Function(int) onVeiculoEscolhidoClicked;
 
   _CustonPositionedRiderDetailState({
     required this.displayRequestRideContainer,
-    required this.listOfVeiculo,
     required this.onFormaPagamentoClicked,
+    required this.onVeiculoEscolhidoClicked,
   });
 
   late FrotaBloc _frotaBloc;
@@ -145,7 +145,11 @@ class _CustonPositionedRiderDetailState
                         child: ListView.builder(
                           itemCount: snapshot.data?.length,
                           itemBuilder: (context, index) {
-                            return ItemVeiculo(snapshot.data?[index]);
+                            return ItemVeiculo(
+                              frota: snapshot.data?[index],
+                              onVeiculoEscolhidoClicked:
+                                  onVeiculoEscolhidoClicked,
+                            );
                           },
                         ),
                       );
@@ -174,7 +178,7 @@ class _CustonPositionedRiderDetailState
                         ),
                       ),
                       onPressed: _frotaBloc.onDecrementaClicked,
-                      child: Icon(
+                      child: const Icon(
                         FontAwesomeIcons.minus,
                         color: Colors.deepPurple,
                         size: 15,
@@ -188,7 +192,7 @@ class _CustonPositionedRiderDetailState
                       stream: _frotaBloc.outPercentualDesconto,
                       builder: (context, snapshot) {
                         return Text(snapshot.data.toString(),
-                            style: TextStyle(
+                            style: const TextStyle(
                                 color: BUTTON_COLOR,
                                 fontSize: 20,
                                 fontFamily: "Montserrat Bold"));
@@ -208,7 +212,7 @@ class _CustonPositionedRiderDetailState
                         ),
                       ),
                       onPressed: _frotaBloc.onIncrementaClicked,
-                      child: Icon(
+                      child: const Icon(
                         FontAwesomeIcons.plus,
                         color: Colors.deepPurple,
                         size: 15,

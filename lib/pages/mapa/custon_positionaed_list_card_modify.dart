@@ -16,19 +16,16 @@ import 'blocs/formaPagamento_bloc.dart';
 class CustonPositionEscolherListaCartaoModifica extends StatefulWidget {
   const CustonPositionEscolherListaCartaoModifica({
     Key? key,
-    required this.onEscolherFormaPagamentOpcaoClicked,
     required this.onCancelarFormaPagamentoOpcaoClicked,
     required this.onAddCardOrModify,
   }) : super(key: key);
 
-  final Function(int) onEscolherFormaPagamentOpcaoClicked;
   final VoidCallback onCancelarFormaPagamentoOpcaoClicked;
   final VoidCallback onAddCardOrModify;
 
   @override
   _CustonPositionEscolherListaCartaoModificaState createState() =>
       _CustonPositionEscolherListaCartaoModificaState(
-        onEscolherCartaoClicked: onEscolherFormaPagamentOpcaoClicked,
         onCancelarEcolhaCartaoClicked: onCancelarFormaPagamentoOpcaoClicked,
         onAddCardOrModify: onAddCardOrModify,
       );
@@ -38,12 +35,10 @@ class _CustonPositionEscolherListaCartaoModificaState
     extends State<CustonPositionEscolherListaCartaoModifica> {
   CartoesPassageiroBloc cartoesPassageiroBloc = CartoesPassageiroBloc();
   double ListofCartoesContainerHeight = 500;
-  Function(int) onEscolherCartaoClicked;
   VoidCallback onCancelarEcolhaCartaoClicked;
   VoidCallback onAddCardOrModify;
 
   _CustonPositionEscolherListaCartaoModificaState({
-    required this.onEscolherCartaoClicked,
     required this.onCancelarEcolhaCartaoClicked,
     required this.onAddCardOrModify,
   });
@@ -114,8 +109,13 @@ class _CustonPositionEscolherListaCartaoModificaState
                       initialData: [
                         EntCartaoPassageiro(
                           passageiroId: 1,
-                          quatroUltimosCartao: 0000,
+                          quatroUltimosCartao: '0000',
                           brand: 'OUTROS',
+                          validade: '06/24',
+                          token: '000',
+                          origem: '00',
+                          adquirenteId: 0,
+                          status: false,
                         )
                       ],
                       builder: (context, snapshot) {
@@ -125,9 +125,10 @@ class _CustonPositionEscolherListaCartaoModificaState
                             String img =
                                 CARD_BRAND[snapshot.data![index].brand] ??
                                     'assets/images/outrocard.png';
-                            String cartao = snapshot
-                                .data![index].quatroUltimosCartao
-                                .toString();
+                            String cartao =
+                                snapshot.data![index].quatroUltimosCartao;
+                            if (cartao.length > 4)
+                              cartao = cartao.substring(cartao.length - 4);
                             cartao = '****.****.****.' + cartao;
                             return Column(
                               children: [
@@ -137,8 +138,7 @@ class _CustonPositionEscolherListaCartaoModificaState
                                     width: 30,
                                     height: 30,
                                   ),
-                                  subtitle:
-                                      Text(snapshot.data![index].brand ?? ''),
+                                  subtitle: Text(snapshot.data![index].brand),
                                   title: Text(cartao),
                                   iconColor: BUTTON_COLOR,
                                   textColor: Colors.black,
