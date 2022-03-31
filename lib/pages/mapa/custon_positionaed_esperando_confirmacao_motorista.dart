@@ -7,38 +7,38 @@ import '../../DataHandler/appData.dart';
 import '../../componentes/divider_widget.dart';
 import '../search/searchScreen.dart';
 
-class CustonPositionEsperandoConfirmacao extends StatefulWidget {
-  const CustonPositionEsperandoConfirmacao(
+class CustonPositionEsperaMotoristaConfirmacao extends StatefulWidget {
+  const CustonPositionEsperaMotoristaConfirmacao(
       {Key? key,
-      required this.displayEsperandoConfirmacaoContainer,
-        required this.cancelaEsperandoConfirmacaoContainer,
+      required this.displayEsperaMotoristaConfirmacaoContainer,
+        required this.cancelaEsperaMotoristaConfirmacaoContainer,
       required this.motoristaId,})
       : super(key: key);
 
-  final VoidCallback displayEsperandoConfirmacaoContainer;
-  final VoidCallback cancelaEsperandoConfirmacaoContainer;
+  final VoidCallback displayEsperaMotoristaConfirmacaoContainer;
+  final VoidCallback cancelaEsperaMotoristaConfirmacaoContainer;
   final int motoristaId;
 
   @override
-  _CustonPositionEsperandoConfirmacaoState createState() =>
-      _CustonPositionEsperandoConfirmacaoState(
-        displayEsperandoConfirmacaoContainer:
-            displayEsperandoConfirmacaoContainer,
-        cancelaEsperandoConfirmacaoContainer: cancelaEsperandoConfirmacaoContainer,
+  _CustonPositionEsperaMotoristaConfirmacaoState createState() =>
+      _CustonPositionEsperaMotoristaConfirmacaoState(
+        displayEsperaMotoristaConfirmacaoContainer:
+            displayEsperaMotoristaConfirmacaoContainer,
+        cancelaEsperaMotoristaConfirmacaoContainer: cancelaEsperaMotoristaConfirmacaoContainer,
         motoristaId: motoristaId,
       );
 }
 
-class _CustonPositionEsperandoConfirmacaoState
-    extends State<CustonPositionEsperandoConfirmacao> {
-  double EsperandoConfirmacaoContainerHeight = 370;
-  VoidCallback displayEsperandoConfirmacaoContainer;
-  VoidCallback cancelaEsperandoConfirmacaoContainer;
+class _CustonPositionEsperaMotoristaConfirmacaoState
+    extends State<CustonPositionEsperaMotoristaConfirmacao> {
+  double EsperaMotoristaConfirmacaoContainerHeight = 370;
+  VoidCallback displayEsperaMotoristaConfirmacaoContainer;
+  VoidCallback cancelaEsperaMotoristaConfirmacaoContainer;
   final int motoristaId;
 
-  _CustonPositionEsperandoConfirmacaoState({
-    required this.displayEsperandoConfirmacaoContainer,
-    required this.cancelaEsperandoConfirmacaoContainer,
+  _CustonPositionEsperaMotoristaConfirmacaoState({
+    required this.displayEsperaMotoristaConfirmacaoContainer,
+    required this.cancelaEsperaMotoristaConfirmacaoContainer,
     required this.motoristaId,
   });
 
@@ -52,7 +52,7 @@ class _CustonPositionEsperandoConfirmacaoState
         duration: Duration(milliseconds: 160),
         curve: Curves.bounceIn,
         child: Container(
-          height: EsperandoConfirmacaoContainerHeight,
+          height: EsperaMotoristaConfirmacaoContainerHeight,
           decoration: BoxDecoration(
             color: Colors.deepPurple.shade300,
             borderRadius: BorderRadius.only(
@@ -101,7 +101,7 @@ class _CustonPositionEsperandoConfirmacaoState
                   width: MediaQuery.of(context).size.width * 0.95,
                   height: 50,
                   child: ElevatedButton(
-                      onPressed: cancelaEsperandoConfirmacaoContainer,
+                      onPressed: cancelaEsperaMotoristaConfirmacaoContainer,
                       child: Text("CANCELAR"),
                     style: ElevatedButton.styleFrom(
                       elevation: 0,

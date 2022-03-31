@@ -6,6 +6,7 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
+import 'package:taksim/pages/mapa/blocs/motorista_bloc.dart';
 import 'package:taksim/pages/mapa/cabecalho_mapa.dart';
 import 'package:taksim/pages/mapa/custon_positionaed_bem_vindo.dart';
 import 'package:taksim/pages/mapa/custon_positionaed_list_card_modify.dart';
@@ -15,10 +16,12 @@ import '../../componentes/drawer/custom_drawer.dart';
 import '../../componentes/progressDialog.dart';
 import '../../dominio/directDetails.dart';
 import '../../dominio/ent_passageiro.dart';
+import '../../helpers/enums_controler.dart';
 import 'custon_positionaed_Forma_pagamento.dart';
 import 'custon_positionaed_Forma_pagamento_opcao.dart';
 import 'custon_positionaed_adicionar_cartao.dart';
 import 'custon_positionaed_esperando_confirmacao_motorista.dart';
+import 'custon_positionaed_motorista_a_caminho.dart';
 import 'custon_positionaed_ola.dart';
 import 'custon_positionaed_rider_detail.dart';
 
@@ -41,6 +44,7 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
   late Set<Marker> markersSet = {};
   late Set<Circle> circlesSet = {};
 
+  MotoristaBloc motoristaBloc = MotoristaBloc();
   bool showRiderDetailContainer = false;
   bool showOlaContainer = false;
   bool showCancelContainer = false;
@@ -51,6 +55,7 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
   bool showCartaoOrModify = false;
   bool showAdicionarCartao = false;
   bool showEsperaMotoristaConfirmacao = false;
+  bool showMotoristaACaminho = false;
 
   String enderecoOrigem = 'Não Informado';
   String enderecoDestino = 'Não Informado';
@@ -71,6 +76,78 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
     passageiro.getLocal();
 
     AssistantMethods.getCurrentOnlineUserInfo();
+
+    motoristaBloc.outStateScreen.listen((event) {
+      switch (event) {
+        case stateScreenEnum.SCREEN_MOTORISTA_A_CAMINHO:
+          print(motoristaBloc.getRetorno());
+          showDialog(
+            context: context,
+            builder: (_) => AlertDialog(
+              title: Text("Solicitação de viagem"),
+              content: Text(motoristaBloc.getRetorno()),
+              actions: [
+                ElevatedButton(
+                    onPressed: () {
+                      motoristaBloc.cancelarCorrida();
+                      Navigator.pop(context);
+                      displayBemVindoContainer();
+                    },
+                    child: Text("Cancelar")),
+                ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      motoristaBloc.esperandoRespostaMotorista(context);
+                    },
+                    child: Text("Ok")),
+              ],
+            ),
+            barrierDismissible: false,
+          );
+          break;
+        case stateScreenEnum.SCREEN_FAIL:
+          print(motoristaBloc.getRetorno());
+          showDialog(
+            context: context,
+            builder: (_) => AlertDialog(
+              title: Text("Solicitação de viagem"),
+              content: Text(motoristaBloc.getRetorno()),
+              actions: [
+                ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      displayBemVindoContainer();
+                    },
+                    child: Text("Ok")),
+              ],
+            ),
+            barrierDismissible: false,
+          );
+          break;
+        case stateScreenEnum.SCREEN_MOTORISTA_RECUSOU_VIAGEM:
+          showDialog(
+            context: context,
+            builder: (_) => AlertDialog(
+              title: Text("Solicitação de viagem"),
+              content: Text("Motorista esta indisponível no momento!"),
+              actions: [
+                ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      displayBemVindoContainer();
+                    },
+                    child: Text("Ok")),
+              ],
+            ),
+            barrierDismissible: false,
+          );
+          break;
+        case stateScreenEnum.SCREEN_MOTORISTA_ACEITOU_VIAGEM:
+          displayMotoristaAceitouCorrida();
+          // traçar rota entre motorista e passageiro
+          break;
+      }
+    });
   }
 
   void fechaTudo() {
@@ -84,6 +161,7 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
     showCartaoOrModify = false;
     showAdicionarCartao = false;
     showEsperaMotoristaConfirmacao = false;
+    showMotoristaACaminho = false;
   }
 
   void displayRiderDetailContainer() async {
@@ -216,8 +294,7 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
         await AssistantMethods.searchCoordinateAddress(position, context);
   }
 
-  void onVeiculoEscolhidoClicked(int motoristaId)
-  {
+  void onVeiculoEscolhidoClicked(int motoristaId) {
     getEnderecoPartida();
     setState(() {
       fechaTudo();
@@ -227,6 +304,19 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
       bottomPaddingOfMap = 370.0;
       //enderecoOrigem = initialPos.placeName;
       print(motoristaId);
+      motoristaBloc.pedeConfirmacaoMotorista(
+          enderecoOrigem: enderecoOrigem,
+          motoristaId: motoristaId,
+          context: context);
+    });
+  }
+
+  void displayMotoristaAceitouCorrida() {
+    setState(() {
+      fechaTudo();
+      showCabecalhoMapa = true;
+      showMotoristaACaminho = true;
+      bottomPaddingOfMap = 370.0;
     });
   }
 
@@ -356,12 +446,25 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
                     )
                   : null,
             ),
+            // Esperando confirmacao motorista
             Container(
               child: showEsperaMotoristaConfirmacao
-                  ? CustonPositionEsperandoConfirmacao(
-                displayEsperandoConfirmacaoContainer: () {},
-                cancelaEsperandoConfirmacaoContainer: displayBemVindoContainer,
-                motoristaId: motoristaId,
+                  ? CustonPositionEsperaMotoristaConfirmacao(
+                      displayEsperaMotoristaConfirmacaoContainer: () {},
+                      cancelaEsperaMotoristaConfirmacaoContainer:
+                          displayBemVindoContainer,
+                      motoristaId: motoristaId,
+                    )
+                  : null,
+            ),
+            // Motorista a caminho
+            Container(
+              child: showMotoristaACaminho
+                  ? CustonPositionMotoristaACaminho(
+                displayMotoristaACaminhoContainer: () {},
+                cancelaMotoristaACaminhoContainer: displayBemVindoContainer,
+                motorista: motoristaBloc.motorista,
+                percentualDesconto: passageiro.percentualDesconto.toInt(),
               )
                   : null,
             ),
@@ -371,8 +474,7 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
     );
   }
 
-  void getEnderecoPartida()
-  {
+  void getEnderecoPartida() {
     var initialPos =
         Provider.of<AppData>(context, listen: false).pickUpLocation;
     enderecoOrigem = initialPos.placeName;
@@ -513,6 +615,130 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
 
   void voltarTela() {
     displayBemVindoContainer();
+  }
+
+  Future<void> getPlaceDirectionDriverToPassenger({required LatLng pickUpLatLng, required LatLng dropOffLatLng}) async {
+
+    showDialog(
+        context: context,
+        builder: (BuildContext context) => ProgressDialog(
+          message: "Por favor espere...",
+        ));
+
+    var details = await AssistantMethods.obtainPlaceDirectionDetails(
+        pickUpLatLng, dropOffLatLng);
+
+    if (details == null) {
+      Navigator.pop(context);
+      showDialog(
+          context: context,
+          builder: (BuildContext context) => ProgressDialog(
+            message: "Náo conseguimos traçar sua rota",
+          ));
+      Timer(Duration(seconds: 5), () {
+        setState(() {
+          Navigator.pop(context);
+        });
+      });
+
+      return;
+    }
+    setState(() {
+      tripDirectionDetails = details;
+    });
+
+    Navigator.pop(context);
+
+    PolylinePoints polylinePoints = PolylinePoints();
+    List<PointLatLng> decodedPolyLinePointsResult =
+    polylinePoints.decodePolyline(details.encodedPoints);
+
+    pLineCoordinates.clear();
+
+    if (decodedPolyLinePointsResult.isNotEmpty) {
+      decodedPolyLinePointsResult.forEach((PointLatLng pointLatLng) {
+        pLineCoordinates
+            .add(LatLng(pointLatLng.latitude, pointLatLng.longitude));
+      });
+    }
+
+    polylineSet.clear();
+
+    setState(() {
+      Polyline polyline = Polyline(
+        color: Colors.blue,
+        polylineId: PolylineId("PolylineID"),
+        jointType: JointType.round,
+        points: pLineCoordinates,
+        width: 5,
+        startCap: Cap.roundCap,
+        endCap: Cap.roundCap,
+        geodesic: true,
+      );
+
+      polylineSet.add(polyline);
+    });
+
+    LatLngBounds latLngBounds;
+    if (pickUpLatLng.latitude > dropOffLatLng.latitude &&
+        pickUpLatLng.longitude > dropOffLatLng.longitude) {
+      latLngBounds =
+          LatLngBounds(southwest: dropOffLatLng, northeast: pickUpLatLng);
+    } else if (pickUpLatLng.longitude > dropOffLatLng.longitude) {
+      latLngBounds = LatLngBounds(
+          southwest: LatLng(pickUpLatLng.latitude, dropOffLatLng.longitude),
+          northeast: LatLng(dropOffLatLng.latitude, pickUpLatLng.longitude));
+    } else if (pickUpLatLng.latitude > dropOffLatLng.latitude) {
+      latLngBounds = LatLngBounds(
+          southwest: LatLng(dropOffLatLng.latitude, pickUpLatLng.longitude),
+          northeast: LatLng(pickUpLatLng.latitude, dropOffLatLng.longitude));
+    } else {
+      latLngBounds =
+          LatLngBounds(southwest: pickUpLatLng, northeast: dropOffLatLng);
+    }
+
+    newGoogleMapController
+        .animateCamera(CameraUpdate.newLatLngBounds(latLngBounds, 70));
+
+    Marker pickUpLocMarker = Marker(
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+      infoWindow:
+      InfoWindow(title: "", snippet: "Ponto partida"),
+      position: pickUpLatLng,
+      markerId: MarkerId("pickUpId"),
+    );
+
+    Marker dropOffLocMarker = Marker(
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
+      infoWindow: InfoWindow(title: "", snippet: "Meu destino"),
+      position: dropOffLatLng,
+      markerId: MarkerId("dropOffId"),
+    );
+
+    Circle pickUpLocCircle = Circle(
+      fillColor: Colors.blueAccent,
+      center: pickUpLatLng,
+      radius: 12,
+      strokeWidth: 4,
+      strokeColor: Colors.blueAccent,
+      circleId: CircleId("pickUpId"),
+    );
+
+    Circle dropOffLocCircle = Circle(
+      fillColor: Colors.deepPurple,
+      center: dropOffLatLng,
+      radius: 12,
+      strokeWidth: 4,
+      strokeColor: Colors.deepPurple,
+      circleId: CircleId("dropOffId"),
+    );
+
+    setState(() {
+      markersSet.add(pickUpLocMarker);
+      markersSet.add(dropOffLocMarker);
+      circlesSet.add(pickUpLocCircle);
+      circlesSet.add(dropOffLocCircle);
+    });
   }
 }
 /*

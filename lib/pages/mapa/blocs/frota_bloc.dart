@@ -45,8 +45,8 @@ class FrotaBloc extends BlocBase {
   Map<String, Map<String, dynamic>> _frotas = {};
 
   FrotaBloc(BuildContext context) {
-    _addCarroFrotaQuadrante(context);
     passageiro.getLocal();
+    _addCarroFrotaQuadrante(context);
     _percentualDescontoController.sink.add(passageiro.percentualDesconto);
     percentual = passageiro.percentualDesconto;
     _formaPagamentoController.sink.add(passageiro.preferenciaFormaPagamento);
@@ -55,11 +55,12 @@ class FrotaBloc extends BlocBase {
             FontAwesomeIcons.moneyCheckAlt);
   }
 
-  void _addCarroFrotaQuadrante(BuildContext context) async {
+  Future<void> _addCarroFrotaQuadrante(BuildContext context) async {
     Timer.periodic(Duration(seconds: 10), (Timer t) {
-      verificaAtualizacaoListaFrota(context);
       if (cancelaTimer)
         t.cancel();
+      else
+        verificaAtualizacaoListaFrota(context);
     });
   }
 
@@ -77,7 +78,8 @@ class FrotaBloc extends BlocBase {
             .latitude;
         passageiro.longitude = appData.pickUpLocation
             .longitude;
-        passageiro.setLocal();
+        if (passageiro.id != 0)
+          passageiro.setLocal();
       }
     }
     List<EntFrota> listOfFrota = await EntFrota(

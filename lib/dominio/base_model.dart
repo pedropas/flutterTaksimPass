@@ -20,7 +20,7 @@ abstract class BaseModelo
   void setLocal();
   Future<bool> setRemoto();
 
-  static DateTime? convertToDate(String dt)
+  static DateTime? convertToDate(String? dt)
   {
     try {
       if (dt != null && dt.isNotEmpty)

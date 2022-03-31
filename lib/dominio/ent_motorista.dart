@@ -2,9 +2,12 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/widgets.dart';
 
+import '../persistencia/per_motorista.dart';
 import 'base_model.dart';
 
 class EntMotorista extends BaseModelo {
+  PerMotorista perMotorista = PerMotorista();
+  String msgErro='';
   String paisOperacao = "";
   String codigo = "";
   String nome = "";
@@ -119,6 +122,7 @@ class EntMotorista extends BaseModelo {
   DateTime? dtHabilitacao = null;
   DateTime? dtOnLine = null;
   DateTime? dtNascto = null;
+  int avaliacao = 0;
 
   Image? getImageFoto()
   {
@@ -220,7 +224,8 @@ class EntMotorista extends BaseModelo {
       'dtValidacaoEmail': getDataToString(dtValidacaoEmail),
       'dtHabilitacao': getDataToString(dtHabilitacao),
       'dtOnLine': getDataToString(dtOnLine),
-      'dtNascto': getDataToString(dtNascto)
+      'dtNascto': getDataToString(dtNascto),
+      'avaliacao':avaliacao,
     };
   }
 
@@ -230,7 +235,7 @@ class EntMotorista extends BaseModelo {
     return jsonString;
   }
 
-  EntMotorista.fromJson(String jsonString) {
+  void fromJson(String jsonString) {
     if (jsonString == null || jsonString.isEmpty) return;
 
     //print(jsonString);
@@ -317,6 +322,7 @@ class EntMotorista extends BaseModelo {
     if (jsonMap.containsKey('dtHabilitacao')) dtHabilitacao = BaseModelo.convertToDate(jsonMap['dtHabilitacao']);
     if (jsonMap.containsKey('dtOnLine')) dtOnLine = BaseModelo.convertToDate(jsonMap['dtOnLine']);
     if (jsonMap.containsKey('dtNascto')) dtNascto = BaseModelo.convertToDate(jsonMap['dtNascto']);
+    if (jsonMap.containsKey('avaliacao')) avaliacao = jsonMap['avaliacao'];
   }
 
   @override
@@ -338,5 +344,34 @@ class EntMotorista extends BaseModelo {
   Future<bool> setRemoto() {
     // TODO: implement setRemoto
     throw UnimplementedError();
+  }
+
+  Future<bool> pedidoCorrida(int id, String senha, String enderecoOrigem, double percentualDesconto) async {
+    String dados = this.id.toString() + "#" + enderecoOrigem + "#" + percentualDesconto.toString();
+    bool retorno = await perMotorista.pedidoCorrida(id,senha,dados);
+    if (retorno)
+      return true;
+    else {
+      msgErro = perMotorista.getRetorno();
+      return false;
+    }
+  }
+
+  String getRetorno()
+  {
+    return msgErro;
+  }
+
+  Future<bool> buscarRepostaPedido(int idP, String senhaP) async {
+    String dados = this.id.toString();
+    bool retorno = await perMotorista.respostaPedidoCorrida(idP,senhaP,dados);
+    if (retorno) {
+      fromJson(perMotorista.getRetorno());
+      return true;
+    }
+    else {
+      msgErro = perMotorista.getRetorno();
+      return false;
+    }
   }
 }
