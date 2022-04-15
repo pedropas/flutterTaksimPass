@@ -57,7 +57,7 @@ class _EscolhaIdiomaState extends State<EscolhaIdioma> {
                 ),
                 ButtonFlag(
                   flagImage: 'assets/images/USA-Flag.png',
-                  flagName: 'Inglesh',
+                  flagName: 'English',
                   isSelected: idiomaSelecionado == IDIOMA_INGLES,
                   onIdiomaSelecionado: onInglesClicked,
                 ),

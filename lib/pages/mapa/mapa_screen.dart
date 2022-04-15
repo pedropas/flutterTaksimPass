@@ -33,6 +33,7 @@ class mapScreen extends StatefulWidget {
 }
 
 class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
+
   Completer<GoogleMapController> _controllerGoogleMap = Completer();
   late GoogleMapController newGoogleMapController;
 
@@ -80,7 +81,6 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
     motoristaBloc.outStateScreen.listen((event) {
       switch (event) {
         case stateScreenEnum.SCREEN_MOTORISTA_A_CAMINHO:
-          print(motoristaBloc.getRetorno());
           showDialog(
             context: context,
             builder: (_) => AlertDialog(
@@ -481,8 +481,7 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
   }
 
   Future<void> getPlaceDirection() async {
-    var initialPos =
-        Provider.of<AppData>(context, listen: false).pickUpLocation;
+    var initialPos = Provider.of<AppData>(context, listen: false).pickUpLocation;
     var finalPos = Provider.of<AppData>(context, listen: false).dropOffLocation;
 
     var pickUpLatLng = LatLng(initialPos.latitude, initialPos.longitude);
@@ -703,7 +702,7 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
     Marker pickUpLocMarker = Marker(
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
       infoWindow:
-      InfoWindow(title: "", snippet: "Ponto partida"),
+      const InfoWindow(title: "", snippet: "Ponto partida"),
       position: pickUpLatLng,
       markerId: MarkerId("pickUpId"),
     );
@@ -721,7 +720,7 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
       radius: 12,
       strokeWidth: 4,
       strokeColor: Colors.blueAccent,
-      circleId: CircleId("pickUpId"),
+      circleId: const CircleId("pickUpId"),
     );
 
     Circle dropOffLocCircle = Circle(
@@ -730,7 +729,7 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
       radius: 12,
       strokeWidth: 4,
       strokeColor: Colors.deepPurple,
-      circleId: CircleId("dropOffId"),
+      circleId: const CircleId("dropOffId"),
     );
 
     setState(() {

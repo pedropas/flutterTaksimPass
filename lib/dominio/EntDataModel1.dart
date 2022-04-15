@@ -17,7 +17,7 @@ class EntDataModel1 extends BaseModelo {
   int tarifa = 0;
   int tipo = 0;
   bool statusConexao = false;
-  int price = 0;
+  double price = 0;
   String endereco = "";
   DateTime? dtHoraEnderecoChegada;
   int veiculoId = 0;
@@ -139,7 +139,7 @@ class EntDataModel1 extends BaseModelo {
     int tarifa = 0;
     int tipo = 0;
     bool statusConexao = false;
-    int price = 0;
+    double price = 0;
     String endereco = "";
     DateTime? dtHoraEnderecoChegada;
     int veiculoId = 0;
@@ -178,7 +178,7 @@ class EntDataModel1 extends BaseModelo {
     if (jsonMap.containsKey('action')) action = jsonMap['action'];
     if (jsonMap.containsKey('actionLida')) actionLida = jsonMap['actionLida'];
     if (jsonMap.containsKey('mensagem')) mensagem = jsonMap['mensagem'];
-    if (jsonMap.containsKey('cidadeId')) latitude = jsonMap['cidadeId'];
+    if (jsonMap.containsKey('cidadeId')) cidadeId = jsonMap['cidadeId'];
     if (jsonMap.containsKey('corridaId')) corridaId = jsonMap['corridaId'];
     if (jsonMap.containsKey('status')) status = jsonMap['status'];
     if (jsonMap.containsKey('posicao')) posicao = jsonMap['posicao'];

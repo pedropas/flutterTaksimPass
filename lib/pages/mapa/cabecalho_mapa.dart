@@ -32,7 +32,7 @@ class CabecalhoMapa extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(30.0),
-                  boxShadow: [
+                  boxShadow: const [
                     BoxShadow(
                       color: Colors.black54,
                       blurRadius: 6.0,
@@ -48,17 +48,17 @@ class CabecalhoMapa extends StatelessWidget {
                     onTap: onRetornoClicked),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               width: 8,
             ),
             SizedBox(
               height: 40,
               width: 280,
               child: Container(
-                padding: EdgeInsets.symmetric(
+                padding: const EdgeInsets.symmetric(
                   horizontal: 10,
                 ),
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Colors.white,
                   boxShadow: [
                     BoxShadow(
@@ -74,12 +74,12 @@ class CabecalhoMapa extends StatelessWidget {
                     Expanded(
                         child: Text(
                       origem,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontFamily: "Montserrat Bold",
                         fontSize: 10,
                       ),
                     )),
-                    Text(
+                    const Text(
                       "> ",
                       style: TextStyle(
                           fontFamily: "Montserrat Bold", color: BUTTON_COLOR),
@@ -87,7 +87,7 @@ class CabecalhoMapa extends StatelessWidget {
                     Expanded(
                         child: Text(
                       destino,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontFamily: "Montserrat Bold",
                         fontSize: 10,
                       ),

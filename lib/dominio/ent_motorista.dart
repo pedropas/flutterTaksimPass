@@ -374,4 +374,17 @@ class EntMotorista extends BaseModelo {
       return false;
     }
   }
+
+  Future<bool> buscarPosicaoAtual(int idP, String senhaP) async {
+    String dados = this.id.toString();
+    bool retorno = await perMotorista.getPosicaoAtual(idP,senhaP,dados);
+    if (retorno) {
+      msgErro = perMotorista.getRetorno();
+      return true;
+    }
+    else {
+      msgErro = perMotorista.getRetorno();
+      return false;
+    }
+  }
 }

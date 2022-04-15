@@ -55,4 +55,18 @@ class PerMotorista {
       return false;
     }
   }
+
+  Future<bool> getPosicaoAtual(int idP, String senhaP, String dados) async {
+    try {
+      retorno = await mHttp.sendCripto(
+          endPoint: '/data/CEL_FLU_GET_POSICAO_MOTORISTA_PASSAGEIRO',
+          chave: senhaP,
+          userId: idP.toString(),
+          dados: dados);
+      return true;
+    } catch (e) {
+      retorno = e.toString();
+      return false;
+    }
+  }
 }

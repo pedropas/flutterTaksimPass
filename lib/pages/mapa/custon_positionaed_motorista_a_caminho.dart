@@ -130,11 +130,11 @@ class _CustonPositionMotoristaACaminhoState
                                   children: [
                                     Text(
                                       motorista.avaliacao.toStringAsFixed(2),
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontSize: 18,
                                       ),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       width: 15,
                                     ),
                                     Icon(
@@ -217,11 +217,11 @@ class _CustonPositionMotoristaACaminhoState
                       ),
                       child: Column(
                         children: [
-                          SizedBox(
+                          const SizedBox(
                             height: 15,
                           ),
                           Row(
-                            children: [
+                            children: const [
                               SizedBox(
                                 height: 20,
                                 child: Text(
@@ -231,7 +231,7 @@ class _CustonPositionMotoristaACaminhoState
                                   ),
                                 ),
                               ),
-                              const SizedBox(
+                              SizedBox(
                                 width: 50,
                               ),
                               SizedBox(
@@ -245,7 +245,7 @@ class _CustonPositionMotoristaACaminhoState
                               ),
                             ],
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 15,
                           ),
                           SizedBox(
@@ -280,7 +280,7 @@ class _CustonPositionMotoristaACaminhoState
                                     width: 7,
                                   ),
                                   // adaptado
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 20,
                                     child: Text(
                                       "Adaptado ",

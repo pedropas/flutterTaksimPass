@@ -203,19 +203,18 @@ class _CustonPositionedOlaState extends State<CustonPositionedOla> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Wrap(
-                          children: [
-                            Text(
-                              Provider.of<AppData>(context).pickUpLocation !=
-                                      null
-                                  ? Provider.of<AppData>(context)
-                                      .pickUpLocation
-                                      .placeName
-                                  : 'Seu Endereço',
-                              style: const TextStyle(
-                                  color: Colors.black, fontSize: 12.0),
-                            ),
-                          ],
+                        SizedBox(
+                          width: 320,
+                          child: Text(
+                            Provider.of<AppData>(context).pickUpLocation !=
+                                    null
+                                ? Provider.of<AppData>(context)
+                                    .pickUpLocation
+                                    .placeName
+                                : 'Seu Endereço',
+                            style: const TextStyle(
+                                color: Colors.black, fontSize: 12.0),
+                          ),
                         ),
                         const SizedBox(
                           height: 4.0,
