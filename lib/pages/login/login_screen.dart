@@ -84,6 +84,8 @@ class _LoginScreen extends State<LoginScreen> {
           break;
         case LoginState.IDLE:
         case LoginState.LOADING:
+        case LoginState.TROCA_CONFIRMADA:
+        case LoginState.TROCA_RECUSADA:
       }
     });
   }

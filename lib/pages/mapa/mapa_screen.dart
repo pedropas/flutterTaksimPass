@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:taksim/pages/mapa/blocs/motorista_bloc.dart';
 import 'package:taksim/pages/mapa/cabecalho_mapa.dart';
 import 'package:taksim/pages/mapa/custon_positionaed_bem_vindo.dart';
+import 'package:taksim/pages/mapa/custon_positionaed_em_corrida.dart';
 import 'package:taksim/pages/mapa/custon_positionaed_list_card_modify.dart';
 import '../../DataHandler/appData.dart';
 import '../../assistants/assistantMethods.dart';
@@ -57,6 +58,7 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
   bool showAdicionarCartao = false;
   bool showEsperaMotoristaConfirmacao = false;
   bool showMotoristaACaminho = false;
+  bool showEmCorridaContainer = false;
 
   String enderecoOrigem = 'Não Informado';
   String enderecoDestino = 'Não Informado';
@@ -79,6 +81,7 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
     AssistantMethods.getCurrentOnlineUserInfo();
 
     motoristaBloc.outStateScreen.listen((event) {
+      //event = stateScreenEnum.SCREEN_EM_CORRIDA;
       switch (event) {
         case stateScreenEnum.SCREEN_MOTORISTA_A_CAMINHO:
           showDialog(
@@ -146,6 +149,15 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
           displayMotoristaAceitouCorrida();
           // traçar rota entre motorista e passageiro
           break;
+        case stateScreenEnum.SCREEN_EM_CORRIDA:
+          displayEmCorrida();
+          // traçar rota entre motorista e passageiro
+          break;
+        case stateScreenEnum.SCREEN_SUCCESS:
+        case stateScreenEnum.SCREEN_LOADING:
+        case stateScreenEnum.SCREEN_INSERT:
+        case stateScreenEnum.SCREEN_IDLE:
+        case stateScreenEnum.SCREEN_ESPERANDO_CONFIRMACAO_MOTORISTA:
       }
     });
   }
@@ -162,6 +174,7 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
     showAdicionarCartao = false;
     showEsperaMotoristaConfirmacao = false;
     showMotoristaACaminho = false;
+    showEmCorridaContainer = false;
   }
 
   void displayRiderDetailContainer() async {
@@ -229,6 +242,15 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
       showCartaoOrModify = true;
       bottomPaddingOfMap = 500.0;
       showAdicionarCartao = true;
+    });
+  }
+
+  void displayEmCorrida() {
+    setState(() {
+      fechaTudo();
+      showCabecalhoMapa = true;
+      showEmCorridaContainer = true;
+      bottomPaddingOfMap = 260.0;
     });
   }
 
@@ -339,28 +361,45 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
                 Image.asset('assets/images/user_icon.png')),
         body: Stack(
           children: [
-            GoogleMap(
-              padding: EdgeInsets.only(
-                bottom: bottomPaddingOfMap,
-                top: 25,
-              ),
-              mapType: MapType.normal,
-              myLocationButtonEnabled: true,
-              initialCameraPosition: _kGooglePlex,
-              myLocationEnabled: true,
-              zoomControlsEnabled: true,
-              zoomGesturesEnabled: true,
-              polylines: polylineSet,
-              markers: markersSet,
-              circles: circlesSet,
-              onMapCreated: (GoogleMapController controller) {
-                _controllerGoogleMap.complete(controller);
-                newGoogleMapController = controller;
-                setState(() {
-                  bottomPaddingOfMap = 350.0;
-                });
-                locatePosition();
-              },
+            StreamBuilder<stateScreenEnum>(
+              stream: motoristaBloc.outStateScreen,
+              builder: (context, snapshot) {
+                if (snapshot.data != stateScreenEnum.SCREEN_MOTORISTA_ACEITOU_VIAGEM) {
+                  motoristaBloc.verificaPosicaoMotorista(context).then((value) =>
+                  motoristaBloc.getPlaceDirectionDriverToPassengerBloc
+                  );
+                }
+                else
+                  motoristaBloc.getPlaceDirectionDriverToPassengerBloc();
+                return StreamBuilder<DirectionDetails>(
+                  stream: motoristaBloc.outTripDirectionalDetail,
+                  builder: (context, snapshot) {
+                    return GoogleMap(
+                      padding: EdgeInsets.only(
+                        bottom: bottomPaddingOfMap,
+                        top: 25,
+                      ),
+                      mapType: MapType.normal,
+                      myLocationButtonEnabled: true,
+                      initialCameraPosition: _kGooglePlex,
+                      myLocationEnabled: true,
+                      zoomControlsEnabled: true,
+                      zoomGesturesEnabled: true,
+                      polylines: motoristaBloc.polylineSet,
+                      markers: motoristaBloc.markersSet,
+                      circles: motoristaBloc.circlesSet,
+                      onMapCreated: (GoogleMapController controller) {
+                        _controllerGoogleMap.complete(controller);
+                        newGoogleMapController = controller;
+                        setState(() {
+                          bottomPaddingOfMap = 350.0;
+                        });
+                        locatePosition();
+                      },
+                    );
+                  }
+                );
+              }
             ),
             // Cabeçalho do mapa
             Container(
@@ -465,6 +504,18 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
                 cancelaMotoristaACaminhoContainer: displayBemVindoContainer,
                 motorista: motoristaBloc.motorista,
                 percentualDesconto: passageiro.percentualDesconto.toInt(),
+                motoristaBloc: motoristaBloc,
+              )
+                  : null,
+            ),
+            Container(
+              child: showEmCorridaContainer
+                  ? CustonPositionEmCorrida(
+                displayEmCorridaContainer: () {},
+                cancelaEmCorridaContainer: displayBemVindoContainer,
+                motorista: motoristaBloc.motorista,
+                percentualDesconto: passageiro.percentualDesconto.toInt(),
+                motoristaBloc: motoristaBloc,
               )
                   : null,
             ),

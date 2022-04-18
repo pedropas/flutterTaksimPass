@@ -4,6 +4,8 @@ import 'package:taksim/componentes/cabecalho_cadastro.dart';
 import 'package:taksim/dominio/ent_motorista.dart';
 import 'package:taksim/helpers/config_screen.dart';
 import '../../componentes/image_icon_custon.dart';
+import '../../dominio/directDetails.dart';
+import 'blocs/motorista_bloc.dart';
 
 class CustonPositionMotoristaACaminho extends StatefulWidget {
   const CustonPositionMotoristaACaminho({
@@ -12,12 +14,14 @@ class CustonPositionMotoristaACaminho extends StatefulWidget {
     required this.cancelaMotoristaACaminhoContainer,
     required this.motorista,
     required this.percentualDesconto,
+    required this.motoristaBloc,
   }) : super(key: key);
 
   final VoidCallback displayMotoristaACaminhoContainer;
   final VoidCallback cancelaMotoristaACaminhoContainer;
   final EntMotorista motorista;
   final int percentualDesconto;
+  final MotoristaBloc motoristaBloc;
 
   @override
   _CustonPositionMotoristaACaminhoState createState() =>
@@ -26,6 +30,7 @@ class CustonPositionMotoristaACaminho extends StatefulWidget {
         cancelaMotoristaACaminhoContainer: cancelaMotoristaACaminhoContainer,
         motorista: motorista,
         percentualDesconto: percentualDesconto,
+        motoristaBloc: motoristaBloc,
       );
 }
 
@@ -36,12 +41,14 @@ class _CustonPositionMotoristaACaminhoState
   VoidCallback cancelaMotoristaACaminhoContainer;
   EntMotorista motorista;
   int percentualDesconto = 0;
+  MotoristaBloc motoristaBloc;
 
   _CustonPositionMotoristaACaminhoState({
     required this.displayMotoristaACaminhoContainer,
     required this.cancelaMotoristaACaminhoContainer,
     required this.motorista,
     required this.percentualDesconto,
+    required this.motoristaBloc,
   });
 
   @override
@@ -204,7 +211,7 @@ class _CustonPositionMotoristaACaminhoState
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 10.0),
+                  padding: EdgeInsets.only(bottom: 10.0),
                   child: SizedBox(
                     height: 100,
                     child: Container(
@@ -220,30 +227,44 @@ class _CustonPositionMotoristaACaminhoState
                           const SizedBox(
                             height: 15,
                           ),
-                          Row(
-                            children: const [
-                              SizedBox(
-                                height: 20,
-                                child: Text(
-                                  "12 km - Distância",
-                                  style: TextStyle(
-                                    fontSize: 18,
+                          StreamBuilder<DirectionDetails>(
+                            stream: motoristaBloc.outTripDirectionalDetail,
+                            builder: (context, snapshot) {
+                              String distancia = 'Sem Dados';
+                              String tempo = 'Sem Dados';
+                              if (snapshot.data != null)
+                              {
+                                if (snapshot.data!.distanceText != null)
+                                  distancia = '  Distância: ' + snapshot.data!.distanceText;
+                                if (snapshot.data!.durationText != null)
+                                  tempo = 'Tempo: ' + snapshot.data!.durationText;
+                              }
+                              return Row(
+                                children: [
+                                  SizedBox(
+                                    height: 20,
+                                    child: Text(
+                                      distancia,
+                                      style: const TextStyle(
+                                        fontSize: 18,
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 50,
-                              ),
-                              SizedBox(
-                                height: 20,
-                                child: Text(
-                                  "21 min - Chegada",
-                                  style: TextStyle(
-                                    fontSize: 18,
+                                  const SizedBox(
+                                    width: 50,
                                   ),
-                                ),
-                              ),
-                            ],
+                                  SizedBox(
+                                    height: 20,
+                                    child: Text(
+                                      tempo,
+                                      style: const TextStyle(
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            }
                           ),
                           const SizedBox(
                             height: 15,

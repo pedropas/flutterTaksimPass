@@ -187,7 +187,7 @@ class _CustonPositionAdicionarCartaoState
                                   radius: 50,
                                 )),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 60,
                           ),
                           //CVV
@@ -284,7 +284,7 @@ class _CustonPositionAdicionarCartaoState
                                   })),
                         ],
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 5,
                       ),
                       StreamBuilder<int>(

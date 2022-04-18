@@ -18,13 +18,8 @@ import '../../../helpers/enums_controler.dart';
 class MotoristaBloc extends BlocBase {
   final _MotoristaController = BehaviorSubject<List>();
   final _ScreenStateController = BehaviorSubject<stateScreenEnum>();
-  final _LatitudeMotoristaController = BehaviorSubject<double>();
-  final _LongitudeMotoristaController = BehaviorSubject<double>();
-  final _LatitudePassageiroController = BehaviorSubject<double>();
-  final _LongitudePassageiroController = BehaviorSubject<double>();
   final _TripDirectionDetailsController = BehaviorSubject<DirectionDetails>();
 
-  final  _NewGoogleMapController = BehaviorSubject<GoogleMapController>();
   final _PolylineSetController =  BehaviorSubject<Set<Polyline>>();
   final _MarkersSetController =  BehaviorSubject<Set<Marker>>();
   final _CirclesSetController =  BehaviorSubject<Set<Circle>>();
@@ -33,14 +28,16 @@ class MotoristaBloc extends BlocBase {
   int motoristaId = 0;
   bool cancelarTimer = false;
   EntPassageiro passageiro = EntPassageiro();
+  LatLng pickUpLatLng = LatLng(0,0);
+  LatLng dropOffLatLng = LatLng(0,0);
+
+  Set<Polyline> polylineSet = {};
+  Set<Marker> markersSet = {};
+  Set<Circle> circlesSet = {};
 
   Stream<List> get outMotoristas => _MotoristaController.stream;
   Stream<stateScreenEnum> get outStateScreen => _ScreenStateController.stream;
 
-  Stream<double> get outLatitudeMotorista => _LatitudeMotoristaController.stream;
-  Stream<double> get outLongitudeMotorista => _LongitudeMotoristaController.stream;
-  Stream<double> get outLatitudePassageiro => _LatitudePassageiroController.stream;
-  Stream<double> get outLongitudePassageiro => _LongitudePassageiroController.stream;
   Stream<DirectionDetails> get outTripDirectionalDetail => _TripDirectionDetailsController.stream;
   Stream<Set<Polyline>> get outPolylineSet => _PolylineSetController.stream;
   Stream<Set<Marker>> get outMarkerSet => _MarkersSetController.stream;
@@ -156,17 +153,18 @@ class MotoristaBloc extends BlocBase {
         if (passageiro.id != 0)
           passageiro.setLocal();
       }
-      _LatitudePassageiroController.add(passageiro.latitude);
-      _LongitudePassageiroController.add(passageiro.longitude);
+      pickUpLatLng = LatLng(passageiro.latitude,passageiro.longitude);
     }
     motorista.buscarPosicaoAtual(passageiro.id,passageiro.senha).then((value) {
       if (value){
         if (motorista.getRetorno() != null) {
           EntDataModel1 dataModel1 = EntDataModel1.fromJson(
               json.decode(motorista.getRetorno()));
-          print(dataModel1);
-          _LatitudeMotoristaController.add(dataModel1.latitude);
-          _LongitudeMotoristaController.add(dataModel1.longitude);
+          dropOffLatLng = LatLng(dataModel1.latitude,dataModel1.longitude);
+          getPlaceDirectionDriverToPassengerBloc();
+          if (dataModel1.action == actionPassageiro.ACTION_EM_CORRIDA_MACANETA) {
+            _ScreenStateController.add(stateScreenEnum.SCREEN_EM_CORRIDA);
+          }
         }
       }
       else {
@@ -183,11 +181,8 @@ class MotoristaBloc extends BlocBase {
     _MotoristaController.close();
   }
 
-  Future<void> getPlaceDirectionDriverToPassenger({required LatLng pickUpLatLng, required LatLng dropOffLatLng, required GoogleMapController newGoogleMapController}) async {
+  Future<void> getPlaceDirectionDriverToPassengerBloc() async {
     List<LatLng> pLineCoordinates = [];
-    Set<Polyline> polylineSet = {};
-    Set<Marker> markersSet = {};
-    Set<Circle> circlesSet = {};
 
     var details = await AssistantMethods.obtainPlaceDirectionDetails(
         pickUpLatLng, dropOffLatLng);
@@ -197,6 +192,7 @@ class MotoristaBloc extends BlocBase {
       // não conseguiu traçar rota
       return;
     }
+
     _TripDirectionDetailsController.add(details);
 
     PolylinePoints polylinePoints = PolylinePoints();
@@ -246,8 +242,8 @@ class MotoristaBloc extends BlocBase {
           LatLngBounds(southwest: pickUpLatLng, northeast: dropOffLatLng);
     }
 
-    newGoogleMapController
-        .animateCamera(CameraUpdate.newLatLngBounds(latLngBounds, 70));
+    // newGoogleMapController
+    //     .animateCamera(CameraUpdate.newLatLngBounds(latLngBounds, 70));
 
     Marker pickUpLocMarker = Marker(
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
@@ -286,6 +282,5 @@ class MotoristaBloc extends BlocBase {
     circlesSet.add(pickUpLocCircle);
     circlesSet.add(dropOffLocCircle);
     _CirclesSetController.add(circlesSet);
-
   }
 }
