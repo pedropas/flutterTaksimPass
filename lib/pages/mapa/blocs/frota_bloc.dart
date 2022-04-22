@@ -94,7 +94,8 @@ class FrotaBloc extends BlocBase {
             motoristaId: 0)
         .getList();
 
-    _frotaController.add(listOfFrota);
+    if (listOfFrota.isNotEmpty)
+      _frotaController.add(listOfFrota);
   }
 
   void onIncrementaClicked() {

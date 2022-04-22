@@ -55,10 +55,10 @@ class _CustonPositionEsperaMotoristaConfirmacaoState
           height: EsperaMotoristaConfirmacaoContainerHeight,
           decoration: BoxDecoration(
             color: Colors.deepPurple.shade300,
-            borderRadius: BorderRadius.only(
+            borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(18.0),
                 topRight: Radius.circular(18.0)),
-            boxShadow: [
+            boxShadow: const [
               BoxShadow(
                 color: Colors.black,
                 blurRadius: 16.0,

@@ -10,43 +10,43 @@ import '../../dominio/badget_custom.dart';
 import '../../dominio/directDetails.dart';
 import 'blocs/motorista_bloc.dart';
 
-class CustonPositionEmCorrida extends StatefulWidget {
-  const CustonPositionEmCorrida({
+class CustonPositionEmPagamento extends StatefulWidget {
+  const CustonPositionEmPagamento({
     Key? key,
-    required this.displayEmCorridaContainer,
-    required this.cancelaEmCorridaContainer,
+    required this.displayEmPagamentoContainer,
+    required this.cancelaEmPagamentoContainer,
     required this.motorista,
     required this.percentualDesconto,
     required this.motoristaBloc,
   }) : super(key: key);
 
-  final VoidCallback displayEmCorridaContainer;
-  final VoidCallback cancelaEmCorridaContainer;
+  final VoidCallback displayEmPagamentoContainer;
+  final VoidCallback cancelaEmPagamentoContainer;
   final EntMotorista motorista;
   final int percentualDesconto;
   final MotoristaBloc motoristaBloc;
 
   @override
-  _CustonPositionEmCorridaState createState() => _CustonPositionEmCorridaState(
-        displayEmCorridaContainer: displayEmCorridaContainer,
-        cancelaEmCorridaContainer: cancelaEmCorridaContainer,
+  _CustonPositionEmPagamentoState createState() => _CustonPositionEmPagamentoState(
+        displayEmPagamentoContainer: displayEmPagamentoContainer,
+        cancelaEmPagamentoContainer: cancelaEmPagamentoContainer,
         motorista: motorista,
         percentualDesconto: percentualDesconto,
         motoristaBloc: motoristaBloc,
       );
 }
 
-class _CustonPositionEmCorridaState extends State<CustonPositionEmCorrida> {
-  double EmCorridaContainerHeight = 250;
-  VoidCallback displayEmCorridaContainer;
-  VoidCallback cancelaEmCorridaContainer;
+class _CustonPositionEmPagamentoState extends State<CustonPositionEmPagamento> {
+  double EmPagamentoContainerHeight = 450;
+  VoidCallback displayEmPagamentoContainer;
+  VoidCallback cancelaEmPagamentoContainer;
   EntMotorista motorista;
   int percentualDesconto = 0;
   MotoristaBloc motoristaBloc;
 
-  _CustonPositionEmCorridaState({
-    required this.displayEmCorridaContainer,
-    required this.cancelaEmCorridaContainer,
+  _CustonPositionEmPagamentoState({
+    required this.displayEmPagamentoContainer,
+    required this.cancelaEmPagamentoContainer,
     required this.motorista,
     required this.percentualDesconto,
     required this.motoristaBloc,
@@ -62,7 +62,7 @@ class _CustonPositionEmCorridaState extends State<CustonPositionEmCorrida> {
         duration: Duration(milliseconds: 160),
         curve: Curves.bounceIn,
         child: Container(
-          height: EmCorridaContainerHeight,
+          height: EmPagamentoContainerHeight,
           decoration: const BoxDecoration(
             color: Colors.greenAccent,
             borderRadius: BorderRadius.only(

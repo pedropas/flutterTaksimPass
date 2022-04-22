@@ -22,7 +22,10 @@ class AssistantMethods
 
     if(response != 'failed')
     {
-      placeAddress = response["results"][0]["formatted_address"];
+      print(response["status"]);
+      if (response["status"] != "REQUEST_DENIED") {
+        placeAddress = response["results"][0]["formatted_address"];
+      }
       // st1 = response["results"][0]["address_components"][4]["long_name"];
       // st2 = response["results"][0]["address_components"][7]["long_name"];
       // st3 = response["results"][0]["address_components"][6]["long_name"];
@@ -55,7 +58,7 @@ class AssistantMethods
     print('Valores para direction ');
     print(res);
 
-    if (res["status"] != "ZERO_RESULTS") {
+    if ((res["status"] != "REQUEST_DENIED") && (res["status"] != "ZERO_RESULTS")) {
       directionDetails.encodedPoints =
       res["routes"][0]["overview_polyline"]["points"];
 

@@ -8,6 +8,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:taksim/dominio/EntDataModel1.dart';
+import 'package:taksim/dominio/badget_custom.dart';
 import 'package:taksim/dominio/ent_motorista.dart';
 import 'package:taksim/dominio/ent_passageiro.dart';
 import '../../../DataHandler/appData.dart';
@@ -20,28 +21,44 @@ class MotoristaBloc extends BlocBase {
   final _ScreenStateController = BehaviorSubject<stateScreenEnum>();
   final _TripDirectionDetailsController = BehaviorSubject<DirectionDetails>();
 
-  final _PolylineSetController =  BehaviorSubject<Set<Polyline>>();
-  final _MarkersSetController =  BehaviorSubject<Set<Marker>>();
-  final _CirclesSetController =  BehaviorSubject<Set<Circle>>();
+  final _PolylineSetController = BehaviorSubject<Set<Polyline>>();
+  final _MarkersSetController = BehaviorSubject<Set<Marker>>();
+  final _CirclesSetController = BehaviorSubject<Set<Circle>>();
+  final _DataModel1Controller = BehaviorSubject<EntDataModel1>();
+  final _TempoViagemController = BehaviorSubject<String>();
+  final _BadgetController = BehaviorSubject<BadgetCustom>();
+
 
   EntMotorista motorista = EntMotorista();
   int motoristaId = 0;
   bool cancelarTimer = false;
   EntPassageiro passageiro = EntPassageiro();
-  LatLng pickUpLatLng = LatLng(0,0);
-  LatLng dropOffLatLng = LatLng(0,0);
+  LatLng pickUpLatLng = LatLng(0, 0);
+  LatLng dropOffLatLng = LatLng(0, 0);
+  String ultimaPosicao = "";
+  int ultimaTarifa = 1;
 
   Set<Polyline> polylineSet = {};
   Set<Marker> markersSet = {};
   Set<Circle> circlesSet = {};
 
   Stream<List> get outMotoristas => _MotoristaController.stream;
+
   Stream<stateScreenEnum> get outStateScreen => _ScreenStateController.stream;
 
-  Stream<DirectionDetails> get outTripDirectionalDetail => _TripDirectionDetailsController.stream;
+  Stream<DirectionDetails> get outTripDirectionalDetail =>
+      _TripDirectionDetailsController.stream;
+
   Stream<Set<Polyline>> get outPolylineSet => _PolylineSetController.stream;
+
   Stream<Set<Marker>> get outMarkerSet => _MarkersSetController.stream;
+
   Stream<Set<Circle>> get outCirleSet => _CirclesSetController.stream;
+
+  Stream<EntDataModel1> get outDataModel1 => _DataModel1Controller.stream;
+
+  Stream<String> get outTempoViagem => _TempoViagemController.stream;
+  Stream<BadgetCustom> get outBadgetPosicao => _BadgetController.stream;
 
 
   MotoristaBloc() {
@@ -49,12 +66,15 @@ class MotoristaBloc extends BlocBase {
   }
 
   void pedeConfirmacaoMotorista(
-      {required String enderecoOrigem, required int motoristaId, required BuildContext context}) {
+      {required String enderecoOrigem,
+      required int motoristaId,
+      required BuildContext context}) {
     motorista.id = motoristaId;
     _ScreenStateController.add(stateScreenEnum.SCREEN_LOADING);
 
     motorista
-        .pedidoCorrida(passageiro.id, passageiro.senha, enderecoOrigem, passageiro.percentualDesconto)
+        .pedidoCorrida(passageiro.id, passageiro.senha, enderecoOrigem,
+            passageiro.percentualDesconto)
         .then((value) {
       if (value) {
         _ScreenStateController.add(stateScreenEnum.SCREEN_SUCCESS);
@@ -65,13 +85,12 @@ class MotoristaBloc extends BlocBase {
             'Exception: Motorista indisponível neste momento!') {
           _ScreenStateController.add(stateScreenEnum.SCREEN_FAIL);
           cancelarTimer = true;
-        }
-        else if (motorista.getRetorno() ==
+        } else if (motorista.getRetorno() ==
             'Exception: Motorista esta a caminho!') {
-          _ScreenStateController.add(stateScreenEnum.SCREEN_MOTORISTA_A_CAMINHO);
+          _ScreenStateController.add(
+              stateScreenEnum.SCREEN_MOTORISTA_A_CAMINHO);
           cancelarTimer = true;
-        }
-        else
+        } else
           esperandoRespostaMotorista(context);
       }
     });
@@ -92,39 +111,34 @@ class MotoristaBloc extends BlocBase {
   }
 
   Future<void> verificaRespostaMotorista(BuildContext context) async {
-      AppData appData = Provider.of<AppData>(context, listen: false);
-      if (appData != null) {
-        if (passageiro.latitude !=
-            appData.pickUpLocation
-                .latitude ||
-            passageiro.longitude !=
-                appData.pickUpLocation
-                    .longitude) {
-          passageiro.latitude = appData.pickUpLocation
-              .latitude;
-          passageiro.longitude = appData.pickUpLocation
-              .longitude;
-          if (passageiro.id != 0)
-            passageiro.setLocal();
-        }
+    AppData appData = Provider.of<AppData>(context, listen: false);
+    if (appData != null) {
+      if (passageiro.latitude != appData.pickUpLocation.latitude ||
+          passageiro.longitude != appData.pickUpLocation.longitude) {
+        passageiro.latitude = appData.pickUpLocation.latitude;
+        passageiro.longitude = appData.pickUpLocation.longitude;
+        if (passageiro.id != 0) passageiro.setLocal();
       }
-      motorista.buscarRepostaPedido(passageiro.id,passageiro.senha).then((value) {
-        if (value){
-           cancelarTimer = true;
-           _ScreenStateController.add(stateScreenEnum.SCREEN_MOTORISTA_ACEITOU_VIAGEM);
-           Future.delayed(Duration(seconds: 6), (){
-             motoristaAceitouCorrida(context);
-           });
-        }
-        else {
-          if (motorista.msgErro == 'Exception: Motorista recusou a corrida') {
-            _ScreenStateController.add(stateScreenEnum.SCREEN_MOTORISTA_RECUSOU_VIAGEM);
-            cancelarTimer = true;
-          }
-          else
-            print(motorista.msgErro);
-        }
-      });
+    }
+    motorista
+        .buscarRepostaPedido(passageiro.id, passageiro.senha)
+        .then((value) {
+      if (value) {
+        cancelarTimer = true;
+        _ScreenStateController.add(
+            stateScreenEnum.SCREEN_MOTORISTA_ACEITOU_VIAGEM);
+        Future.delayed(Duration(seconds: 6), () {
+          motoristaAceitouCorrida(context);
+        });
+      } else {
+        if (motorista.msgErro == 'Exception: Motorista recusou a corrida') {
+          _ScreenStateController.add(
+              stateScreenEnum.SCREEN_MOTORISTA_RECUSOU_VIAGEM);
+          cancelarTimer = true;
+        } else
+          print(motorista.msgErro);
+      }
+    });
   }
 
   Future<void> motoristaAceitouCorrida(BuildContext context) async {
@@ -140,35 +154,81 @@ class MotoristaBloc extends BlocBase {
   Future<void> verificaPosicaoMotorista(BuildContext context) async {
     AppData appData = Provider.of<AppData>(context, listen: false);
     if (appData != null) {
-      if (passageiro.latitude !=
-          appData.pickUpLocation
-              .latitude ||
-          passageiro.longitude !=
-              appData.pickUpLocation
-                  .longitude) {
-        passageiro.latitude = appData.pickUpLocation
-            .latitude;
-        passageiro.longitude = appData.pickUpLocation
-            .longitude;
-        if (passageiro.id != 0)
-          passageiro.setLocal();
+      if (passageiro.latitude != appData.pickUpLocation.latitude ||
+          passageiro.longitude != appData.pickUpLocation.longitude) {
+        passageiro.latitude = appData.pickUpLocation.latitude;
+        passageiro.longitude = appData.pickUpLocation.longitude;
+        if (passageiro.id != 0) passageiro.setLocal();
       }
-      pickUpLatLng = LatLng(passageiro.latitude,passageiro.longitude);
+      pickUpLatLng = LatLng(passageiro.latitude, passageiro.longitude);
     }
-    motorista.buscarPosicaoAtual(passageiro.id,passageiro.senha).then((value) {
-      if (value){
+    motorista.buscarPosicaoAtual(passageiro.id, passageiro.senha).then((value) {
+      if (value) {
         if (motorista.getRetorno() != null) {
-          EntDataModel1 dataModel1 = EntDataModel1.fromJson(
-              json.decode(motorista.getRetorno()));
-          dropOffLatLng = LatLng(dataModel1.latitude,dataModel1.longitude);
+          EntDataModel1 dataModel1 =
+              EntDataModel1.fromJson(json.decode(motorista.getRetorno()));
+          dropOffLatLng = LatLng(dataModel1.latitude, dataModel1.longitude);
           getPlaceDirectionDriverToPassengerBloc();
-          if (dataModel1.action == actionPassageiro.ACTION_EM_CORRIDA_MACANETA) {
-            _ScreenStateController.add(stateScreenEnum.SCREEN_EM_CORRIDA);
+          if (dataModel1.action ==
+              actionPassageiro.ACTION_EM_CORRIDA_MACANETA.index)
+          {
+            if (_ScreenStateController.valueOrNull !=
+                stateScreenEnum.SCREEN_EM_PAGAMENTO) {
+              _ScreenStateController.add(stateScreenEnum.SCREEN_EM_PAGAMENTO);
+            }
+          }
+          else if (dataModel1.action ==
+              actionPassageiro.ACTION_EM_CORRIDA_MACANETA.index) {
+            if (_ScreenStateController.valueOrNull !=
+                stateScreenEnum.SCREEN_EM_CORRIDA) {
+              _ScreenStateController.add(stateScreenEnum.SCREEN_EM_CORRIDA);
+            }
+
+            {
+              _DataModel1Controller.add(dataModel1);
+              int minutes = (dataModel1.tempoTaximetro / 60).toInt();
+              int seconds = (dataModel1.tempoTaximetro % 60);
+              String tempoTaximetro = minutes.toString().padLeft(2, "0") +
+                  ":" +
+                  seconds.toString().padLeft(2, "0");
+              _TempoViagemController.add(tempoTaximetro);
+
+              Color cFundo=Colors.green;
+              Color cFont=Colors.white;
+              String texto = dataModel1.posicao;
+              if (dataModel1.posicao == 'L') {
+                cFundo = Colors.green;
+                cFont = Colors.white;
+              } else if (dataModel1.posicao == 'C') {
+                cFundo = Colors.blue;
+                cFont = Colors.white;
+                if (dataModel1.tarifa == 1)
+                  texto = '1';
+                else if (dataModel1.tarifa == 2)
+                  texto = '2';
+              }
+              else if (dataModel1.posicao == 'P') {
+                cFundo = Colors.red;
+                cFont = Colors.white;
+              } else if (dataModel1.posicao == 'S') {
+                cFundo = Colors.yellow;
+                cFont = Colors.black;
+              } else if (dataModel1.posicao == 'D') {
+                cFundo = Colors.black;
+                cFont = Colors.white;
+              }
+              if ((ultimaPosicao != dataModel1.posicao)
+                || (dataModel1.tarifa != ultimaTarifa)) {
+                _BadgetController.add(BadgetCustom(color: cFundo
+                    , textColor: cFont
+                    , text: texto));
+                ultimaPosicao = dataModel1.posicao;
+                ultimaTarifa = dataModel1.tarifa;
+              }
+            }
           }
         }
-      }
-      else {
-      }
+      } else {}
     });
   }
 
@@ -187,7 +247,6 @@ class MotoristaBloc extends BlocBase {
     var details = await AssistantMethods.obtainPlaceDirectionDetails(
         pickUpLatLng, dropOffLatLng);
 
-
     if (details == null) {
       // não conseguiu traçar rota
       return;
@@ -197,7 +256,7 @@ class MotoristaBloc extends BlocBase {
 
     PolylinePoints polylinePoints = PolylinePoints();
     List<PointLatLng> decodedPolyLinePointsResult =
-    polylinePoints.decodePolyline(details.encodedPoints);
+        polylinePoints.decodePolyline(details.encodedPoints);
 
     pLineCoordinates.clear();
 
@@ -247,8 +306,7 @@ class MotoristaBloc extends BlocBase {
 
     Marker pickUpLocMarker = Marker(
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
-      infoWindow:
-      const InfoWindow(title: "", snippet: "Ponto partida"),
+      infoWindow: const InfoWindow(title: "", snippet: "Ponto partida"),
       position: pickUpLatLng,
       markerId: MarkerId("pickUpId"),
     );

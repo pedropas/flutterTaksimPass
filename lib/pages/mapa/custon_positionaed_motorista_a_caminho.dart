@@ -1,6 +1,8 @@
+import 'package:badges/badges.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:taksim/componentes/cabecalho_cadastro.dart';
+import 'package:taksim/dominio/badget_custom.dart';
 import 'package:taksim/dominio/ent_motorista.dart';
 import 'package:taksim/helpers/config_screen.dart';
 import '../../componentes/image_icon_custon.dart';
@@ -251,7 +253,7 @@ class _CustonPositionMotoristaACaminhoState
                                     ),
                                   ),
                                   const SizedBox(
-                                    width: 50,
+                                    width: 30,
                                   ),
                                   SizedBox(
                                     height: 20,

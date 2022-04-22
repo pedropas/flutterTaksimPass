@@ -47,7 +47,7 @@ class ItemVeiculo extends StatelessWidget {
               ),
             ),
             Container(
-              padding: EdgeInsets.only(right: 15),
+              padding: EdgeInsets.only(right: 10),
               width: 100,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,

@@ -9,6 +9,7 @@ enum stateScreenEnum {
   SCREEN_MOTORISTA_A_CAMINHO,
   SCREEN_MOTORISTA_ACEITOU_VIAGEM,
   SCREEN_EM_CORRIDA,
+  SCREEN_EM_PAGAMENTO,
 }
 
 enum actionPassageiro {

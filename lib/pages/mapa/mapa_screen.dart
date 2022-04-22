@@ -21,6 +21,7 @@ import '../../helpers/enums_controler.dart';
 import 'custon_positionaed_Forma_pagamento.dart';
 import 'custon_positionaed_Forma_pagamento_opcao.dart';
 import 'custon_positionaed_adicionar_cartao.dart';
+import 'custon_positionaed_em_pagamento.dart';
 import 'custon_positionaed_esperando_confirmacao_motorista.dart';
 import 'custon_positionaed_motorista_a_caminho.dart';
 import 'custon_positionaed_ola.dart';
@@ -59,6 +60,8 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
   bool showEsperaMotoristaConfirmacao = false;
   bool showMotoristaACaminho = false;
   bool showEmCorridaContainer = false;
+  bool showEmPagamentoContainer = false;
+
 
   String enderecoOrigem = 'Não Informado';
   String enderecoDestino = 'Não Informado';
@@ -153,6 +156,9 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
           displayEmCorrida();
           // traçar rota entre motorista e passageiro
           break;
+        case stateScreenEnum.SCREEN_EM_PAGAMENTO:
+          displayEmPagamento();
+          break;
         case stateScreenEnum.SCREEN_SUCCESS:
         case stateScreenEnum.SCREEN_LOADING:
         case stateScreenEnum.SCREEN_INSERT:
@@ -175,6 +181,7 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
     showEsperaMotoristaConfirmacao = false;
     showMotoristaACaminho = false;
     showEmCorridaContainer = false;
+    showEmPagamentoContainer = false;
   }
 
   void displayRiderDetailContainer() async {
@@ -251,6 +258,15 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
       showCabecalhoMapa = true;
       showEmCorridaContainer = true;
       bottomPaddingOfMap = 260.0;
+    });
+  }
+
+  void displayEmPagamento() {
+    setState(() {
+      fechaTudo();
+      showCabecalhoMapa = false;
+      showEmPagamentoContainer = true;
+      bottomPaddingOfMap = 460.0;
     });
   }
 
@@ -513,6 +529,17 @@ class _mapScreenState extends State<mapScreen> with TickerProviderStateMixin {
                   ? CustonPositionEmCorrida(
                 displayEmCorridaContainer: () {},
                 cancelaEmCorridaContainer: displayBemVindoContainer,
+                motorista: motoristaBloc.motorista,
+                percentualDesconto: passageiro.percentualDesconto.toInt(),
+                motoristaBloc: motoristaBloc,
+              )
+                  : null,
+            ),
+            Container(
+              child: showEmPagamentoContainer
+                  ? CustonPositionEmPagamento(
+                displayEmPagamentoContainer: () {},
+                cancelaEmPagamentoContainer: displayBemVindoContainer,
                 motorista: motoristaBloc.motorista,
                 percentualDesconto: passageiro.percentualDesconto.toInt(),
                 motoristaBloc: motoristaBloc,
